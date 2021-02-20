@@ -6,6 +6,6 @@ from Api8inf349.models import init_app, Product, Transaction, CreditCard, Shippi
 
 
 def create_app(initial_config=None):
-    app = Flask("8inf439")
+    app = Flask("Api8inf439")
     init_app(app)
     return app
