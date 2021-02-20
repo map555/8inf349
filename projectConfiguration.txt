@@ -1,10 +1,12 @@
 PROJECT CONFIGURATION
 
-    OS: Ubuntu 20.04.2LTS
+    OS:
+        Ubuntu 20.04.2LTS
+        Windows 10 Pro 64bits V20H2
 
-
-    Python version: Python 3.8.5
-
+    Python version:
+        Python 3.8.5
+        Python 3.9.1
 
     External libraries:
         Flask
@@ -34,6 +36,8 @@ PROJECT CONFIGURATION
         Environment variable:
             PYTHONUNBUFFERED=1;FLASK_APP=Api8inf349;FLASK_ENV=development;FLASK_DEBUG=1
 
-        Python interpreter: Python 3.8
+        Python interpreter:
+            Python 3.8 (if python 3.8)
+            Python 3.9 (if python 3.9)
 
 
