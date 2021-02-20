@@ -73,7 +73,7 @@ class Order(BaseModel):
     paid = BooleanField(null=False, default=False)
     product = ForeignKeyField(Product, backref="orders", null=False)
     product_quantity = IntegerField(null=False)
-    shipping_price = FloatField(null=False, constraints=[Check('shipping_price>=0')])
+    shipping_price = FloatField(null=True, constraints=[Check('shipping_price>=0')])
 
 
 @click.command("init-db")
