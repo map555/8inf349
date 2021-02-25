@@ -25,6 +25,30 @@ def ProductsGET():
     return app.response_class(response=json.dumps(prodsDict),status=200,mimetype='application/json')
 
 
+# TODO: implement the test(s)
+@app.route('/order', methods=['POST'])
+def CreateOrder():
+    r = request.get_json(force=True)
+    orderInitResponse = OrderServices.initOrder(r)
+
+
+    if orderInitResponse['orderInitialized'] is True:
+        order = orderInitResponse['object']
+        return redirect(url_for("OrderGET", order_id=order.id))
+
+    else:
+        return app.response_class(response=json.dumps(orderInitResponse['object']), status=422,
+                                  mimetype='application/json')
+
+
+
+
+@app.route('/order/<int:order_id>', methods=['GET'])
+def OrderGET(order_id):
+    orderDict = OrderServices.getOrderDict(id=order_id)
+
+    return app.response_class(response=json.dumps(orderDict),status=200,mimetype='application/json')
+
 
 with app.app_context():
     InitializeProduct()
