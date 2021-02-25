@@ -80,7 +80,12 @@ class Order(BaseModel):
         self.total_price=self.product.price * self.product_quantity
 
     def setShippingPrice(self):
-        self.
+        if self.product.weight<500:
+            self.shipping_price=5.00
+        elif  500<=self.product.weight<2000:
+            self.shipping_price=10.00
+        else:
+            self.shipping_price=25.00
         
 
 
