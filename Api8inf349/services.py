@@ -68,9 +68,15 @@ class OrderServices(object):
                 available = CheckAvailability(data=data)
 
                 if available is True:
+
                     response['orderInitialized'] = True
-                    response['object'] = Order.create(product=data["product"]["id"],
+                    order= Order.create(product=data["product"]["id"],
                                                       product_quantity=data["product"]["quantity"])
+
+                    order.setTotalPrice()
+                    order.setShippingPrice()
+                    order.save()
+                    response['object']=order
 
                     return response
 
