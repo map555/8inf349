@@ -1,85 +1,90 @@
 from Api8inf349.models import Product, Transaction
+from Api8inf349.schemasValidation import *
+from getDataSetsForTests import *
 import pytest
 
-
-class TestProduct:
-    def __init__(self, product):
-        self.p = product
-        assert type(self.p) == Product
-
-    def __test_pk(self):
-        assert type(self.p.id) == int
-
-    def __test_name(self):
-        assert type(self.p.name) == str
-        assert (0 <= len(self.p.name) <= 255)  # because name is a varchar(255) in the database
-
-    def __test_type(self):
-        assert type(self.p.type) == str
-        assert (0 <= len(self.p.type) <= 255)  # because type is a varchar(255) in the database
-
-    def __test_description(self):
-        assert type(self.p.description) == str
-        assert (0 <= len(self.p.description) <= 255)  # because description is a varchar(255) in the database
-
-    def __test_image(self):
-        assert type(self.p.image) == str
-        assert (0 <= len(self.p.image) <= 255)  # because image is a varchar(255) in the database
-
-    def __test_height(self):
-        assert type(self.p.height) == int
-        assert self.p.height > 0  # Integrity constraint
-
-    def __test_weight(self):
-        assert type(self.p.weight) == int
-        assert self.p.weight > 0  # Integrity constraint
-
-    def __test_price(self):
-        assert type(self.p.price) == float
-        assert self.p.price > 0  # Integrity constraint
-
-    def __test_rating(self):
-        assert type(self.p.rating) == int
-        assert 0 <= self.p.rating <= 5  # Integrity constraints
-
-    def __test_in_stock(self):
-        assert type(self.p.in_stock) == bool
-
-    def test_All(self):
-        self.__test_pk()
-        self.__test_name()
-        self.__test_type()
-        self.__test_description()
-        self.__test_image()
-        self.__test_height()
-        self.__test_weight()
-        self.__test_price()
-        self.__test_rating()
-        self.__test_in_stock()
+"""Because SQLite doesn't force type and peewee doesn't return an error if you try to do weird stuff like
+inserting a integer in a charfield, we use the Schema module to validate if the dictionnaries used to 
+insert informations in the database respect the structure of the models we define in the models.py file.
+The schemas doesn't check the integrity constraints defined in the models because it's the data base's job to do it.
+We only validate the structure of the dictionnaries and the data type of their fields. So instead of directly 
+individually test each field of each model in little unit tests (because it's useless to do our own assert on each field
+when you can still insert invalid stuff in the db outside the context of the tests), we use our validation methods you 
+can found in the schemasValidation.py file and we test all the valid case too. Those validation methods return True or
+False (the same boolean returned by the is_valid method of a Schema object) depending if the dictionnary is conform to 
+the the schema or not. So, for each field, we test individually each wrong case and we did some assert with the boolean
+return value to validate if the dict of parameters will instanciate a valid object model or not. So we test our models
+by validating the structure of the dictionnaries containing the parameters used to instanciate or inserting informations
+in our models and we also reuse those validation methods in the app too."""
 
 
-# private test?
-class TestTransaction:
-
-    def __init__(self, transaction):
-        self.__t = transaction
-        assert type(self.__t) == Transaction
-
-    def test_pk(self):
-        assert type(self.__t.id) == str
-        assert (0 <= len(self.__t.id) <= 255)  # because id is a varchar(255) in the database
-
-    def test_success(self):
-        assert type(self.__t.success) == bool
-
-    def test_amount_charged(self):
-        assert type(self.__t.amount_charged) == float
-        # assert self.__t.amount_charged >= 0
-
-    def test_All(self):
-        self.test_pk()
-        self.test_success()
-        self.test_amount_charged()
+# Test if the dictionnary used to instanciate a product object model is valid
+@pytest.mark.parametrize("pDict", getInvalidProductDicts())
+def test_InvalidProductsDictionnary(pDict):
+    assert ValidateProductSchema(pDict) == False
 
 
+@pytest.mark.parametrize("pDict", getValidProductDict())
+def test_ValidProductDictionnary(pDict):
+    assert ValidateProductSchema(pDict) == True
 
+
+# Test if the dictionnary used to instanciate a ShippingInformation object model is valid
+@pytest.mark.parametrize("sInfoDict", getInvalidShipInfoDicts())
+def test_InvalidShipping(sInfoDict):
+    assert ValidateShippingInfoSchema(sInfoDict) == False
+
+
+@pytest.mark.parametrize("sInfoDict", getValidShipInfoDicts())
+def test_ValidShipping(sInfoDict):
+    assert ValidateShippingInfoSchema(sInfoDict) == True
+
+
+@pytest.mark.parametrize("cCardDict", getInvalidCreditCardDicts())
+def test_InvalidCreditCardDictionnary(cCardDict):
+    assert ValidateCreditCardSchema(cCardDict) == False
+
+
+@pytest.mark.parametrize("cCardDict", getValidCreditCardDicts())
+def test_ValidCreditCardDictionnary(cCardDict):
+    assert ValidateCreditCardSchema(cCardDict) == True
+
+
+@pytest.mark.parametrize("tDict", getInvalidTransactionDicts())
+def testInvalidTransactionDictionnary(tDict):
+    assert ValidateTransactionSchema(tDict) == False
+
+
+@pytest.mark.parametrize("tDict", getValidTransactionDicts())
+def test_ValidTransactionDictionnary(tDict):
+    assert ValidateTransactionSchema(tDict) == True
+
+
+@pytest.mark.parametrize("oDict", getInvalidOrderDicts())
+def test_InvalidOrderDictionnary(oDict):
+    assert ValidateOrderSchema(oDict) == False
+
+
+@pytest.mark.parametrize("oDict", getValidOrderDicts())
+def test_ValidOrderDictionnary(oDict):
+    assert ValidateOrderSchema(oDict) == True
+
+
+@pytest.mark.parametrize("pODict", getInvalidProductOrderDicts())
+def test_InvalidProductOrderDictionnary(pODict):
+    assert ValidateProductOrderSchema(pODict) == False
+
+
+@pytest.mark.parametrize("pODict", getValidProductOrderDict())
+def test_ValidProductOrderDictionnary(pODict):
+    assert ValidateProductOrderSchema(pODict) == True
+
+
+@pytest.mark.parametrize("cInfoDict", getInvalidClientInfoDicts())
+def test_InvalidClientInfoDictionnary(cInfoDict):
+    assert ValidateClientInfoSchema(cInfoDict) == False
+
+
+@pytest.mark.parametrize("cInfoDict", getValidClientInfoDict())
+def test_ValidClientInfoDictionnary(cInfoDict):
+    assert ValidateClientInfoSchema(cInfoDict) == True

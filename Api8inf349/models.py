@@ -15,7 +15,7 @@ class BaseModel(Model):
 
 
 class Product(BaseModel):
-    id = IntegerField(primary_key=True, null=False)
+    id = AutoField(primary_key=True, null=False)
     name = CharField(null=False)
     type = CharField(null=False)
     description = CharField(null=False)
@@ -26,13 +26,12 @@ class Product(BaseModel):
     rating = IntegerField(null=False, constraints=[Check('rating>=0'), Check('rating<=5')])
     in_stock = BooleanField(null=False)
 
-
     def __str__(self):
         return self.id
 
 
 class ShippingInformation(BaseModel):
-    id = AutoField(primary_key=True)  # We don't need to test this field because it's an autoincremented field.
+    id = AutoField(primary_key=True)
     country = CharField()
     address = CharField()
     postal_code = CharField()
@@ -77,16 +76,15 @@ class Order(BaseModel):
     shipping_price = FloatField(null=True, constraints=[Check('shipping_price>=0')])
 
     def setTotalPrice(self):
-        self.total_price=self.product.price * self.product_quantity
+        self.total_price = self.product.price * self.product_quantity
 
     def setShippingPrice(self):
-        if self.product.weight<500:
-            self.shipping_price=5.00
-        elif  500<=self.product.weight<2000:
-            self.shipping_price=10.00
+        if (self.product_quantity * self.product.weight) < 500:
+            self.shipping_price = 5.00
+        elif (self.product_quantity * self.product.weight) < 2000:
+            self.shipping_price = 10.00
         else:
-            self.shipping_price=25.00
-        
+            self.shipping_price = 25.00
 
 
 @click.command("init-db")
@@ -96,13 +94,15 @@ def init_db_command():
     database.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order])
     click.echo("Initialized the database.")
 
+
 def init_Product():
     database = SqliteDatabase(get_db_path())
-    database.create_tables([Product])
+    database.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order])
+
 
 def dropProduct():
     database = SqliteDatabase(get_db_path())
-    database.drop_tables([Product])
+    database.drop_tables([Product, ShippingInformation, CreditCard, Transaction, Order])
 
 
 def init_app(app):

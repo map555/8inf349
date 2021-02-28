@@ -1,22 +1,12 @@
 import pytest
 from Api8inf349.models import Product
-from other import productURL
+from Api8inf349.url import productURL
 from urllib.request import Request, urlopen
 from peewee import Select
 import json
 from Api8inf349.ProductTableInit import CheckExistance_Test
 
 
-class TestProduct(object):
-    def test_rating(self, app):
-        with app.app_context():
-            Product.create(id=1, name="Brown eggs", type="dairy", description="Raw organic brown eggs in a basket",
-                           image="0.jpg", height=600, weight=400, price=28.1, rating=5, in_stock=True)
-
-            y = Product.select().count()
-
-            x = 1
-            assert x == 1
 
 
 def getRequest(url):
@@ -56,19 +46,17 @@ def test_load_product_db(app):
         products = test_product_get_request()
 
         for product in products['products']:
-            Product.create(id=int(product['id']), name=product['name'], type=product['type'],
+            Product.create(name=product['name'], type=product['type'],
                            description=product['description'], image=product['image'], height=product['height'],
                            weight=product['weight'], price=product['price'], rating=product['rating'],
                            in_stock=product['in_stock'])
 
         assert Product.select().count() == 50
 
-
-
 def test_CheckExistance(app):
     with app.app_context():
         p = test_product_get_request()
-        x= CheckExistance_Test(app, p['products'][0])
+        x = CheckExistance_Test(app, p['products'][0])
         assert x == False
 
         Product.create(id=p['products'][0]['id'], name=p['products'][0]['name'], type=p['products'][0]['type'],
@@ -78,3 +66,4 @@ def test_CheckExistance(app):
                        rating=p['products'][0]['rating'], in_stock=p['products'][0]['in_stock'])
 
         assert CheckExistance_Test(app, p['products'][0]) == True
+

@@ -7,6 +7,8 @@ from flask import json
 app = Flask(__name__)
 
 
+# TODO: implement
+
 @app.route('/hw')
 def hello_world():
     return 'Hello World!'
@@ -22,7 +24,7 @@ def ProductsGET():
             {'id': p.id, 'name': p.name, 'type': p.type, 'description': p.description, 'image': p.image,
              "height": p.height, "weight": p.weight, "price": p.price, "rating": p.rating, "in_stock": p.in_stock})
 
-    return app.response_class(response=json.dumps(prodsDict),status=200,mimetype='application/json')
+    return app.response_class(response=json.dumps(prodsDict), status=200, mimetype='application/json')
 
 
 # TODO: implement the test(s)
@@ -30,7 +32,6 @@ def ProductsGET():
 def CreateOrder():
     r = request.get_json(force=True)
     orderInitResponse = OrderServices.initOrder(r)
-
 
     if orderInitResponse['orderInitialized'] is True:
         order = orderInitResponse['object']
@@ -41,13 +42,26 @@ def CreateOrder():
                                   mimetype='application/json')
 
 
-
-
 @app.route('/order/<int:order_id>', methods=['GET'])
 def OrderGET(order_id):
     orderDict = OrderServices.getOrderDict(id=order_id)
 
-    return app.response_class(response=json.dumps(orderDict),status=200,mimetype='application/json')
+    return app.response_class(response=json.dumps(orderDict), status=200, mimetype='application/json')
+
+
+@app.route('/order/<int:order_id>', methods=['PUT'])
+def AddClientInfoToOrder(order_id):
+    dataDict = request.get_json(force=True)
+    if "order" in dataDict:
+        response = OrderServices.setOrderClientInfo(clientInfoDict=dataDict, orderID=order_id)
+
+    else:  # elif "credit_card" in dataDict:
+        response = OrderServices.setCreditCard(cCardDict=dataDict, orderId=order_id)
+
+    # TODO: invalid dict case (maybe)
+
+    return app.response_class(response=json.dumps(response['object']), status=response['status_code'],
+                              mimetype='application/json')
 
 
 with app.app_context():

@@ -1,6 +1,7 @@
 from urllib.request import Request, urlopen
-from other import productURL
+from Api8inf349.url import productURL
 import json
+from Api8inf349.schemasValidation import ValidateProductListSchema
 from Api8inf349.models import Product
 from peewee import Model
 
@@ -24,76 +25,50 @@ def ConvertResponseToJson(response):
     return jsn
 
 
+
+
 def getProducts():
     response = getRequest(url=productURL)
     jsonDict = ConvertResponseToJson(response=response)
     return jsonDict
 
 
-def PopulateProduct(ProductsDict):
-    try:
-
-        for p in ProductsDict['products']:
-            Product.create(id=int(p['id']), name=p['name'], type=p['type'],
-                           description=p['description'], image=p['image'], height=p['height'], weight=p['weight'],
-                           price=p['price'], rating=p['rating'], in_stock=p['in_stock'])
-
-    except Exception as exept:
-        print(exept)
-        exit(0)
-
-
+# for testing...
 def CheckExistance_Test(app, jsonProduct):
     with app.app_context():
-        count = None
 
-        try:
-            id = int(jsonProduct['id'])
-            count = Product.select().where(Product.id == id).count()
-            print()
-        # if an error happens like failed to connect to bd
-        except Exception as exept:
-            print(exept)  # because it's an homework, we print each error
-            exit(0)
+        id = int(jsonProduct['id'])
+        query = Product.select().where(Product.id == id)
+
+        if query.exists():
+            return True
 
         else:
-
-            if count == 1:
-                return True
-
-            elif count == 0:
-                return False
+            return False
 
 
 def CheckExistance(jsonProduct):
-    count = None
+    id = int(jsonProduct['id'])
+    query = Product.select().where(Product.id == id)
 
-    try:
-        id = int(jsonProduct['id'])
-        count = Product.select().where(Product.id == id).count()
-        print()
-    # if an error happens like failed to connect to bd
-    except Exception as exept:
-        print(exept)  # because it's an homework, we print each error
-        exit(0)
+    if query.exists():
+        return True
 
     else:
-
-        if count == 1:
-            return True
-
-        elif count == 0:
-            return False
+        return False
 
 
 # we dont test this one because CheckExistance and bd insert are already tested.
 def UpdateProduct(ProductsDict):
-    for p in ProductsDict['products']:
-        if not CheckExistance(p):
-            x = Product.select().count()
-            Product.create(id=x + 1, name=p['name'], type=p['type'],
-                           description=p['description'], image=p['image'], height=p['height'], weight=p['weight'],
-                           price=p['price'], rating=p['rating'], in_stock=p['in_stock'])
+    if ValidateProductListSchema(ProductsDict) is True:
+        for p in ProductsDict['products']:
+            if not CheckExistance(p):
+                Product.create(name=p['name'], type=p['type'], description=p['description'], image=p['image'],
+                               height=p['height'], weight=p['weight'], price=p['price'], rating=p['rating'],
+                               in_stock=p['in_stock'])
+    else:
+        print("ERROR: INVALID PRODUCT!\nTHE PROGRAM WILL NOW EXIT.")
+        exit(0)
 
 
 def InitializeProduct():

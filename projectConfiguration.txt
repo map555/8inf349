@@ -18,6 +18,9 @@ PROJECT CONFIGURATION
         Pytest
             version: 6.2.2
 
+        Schema
+            version: 0.7.4
+
 
 
     IDE: Pycharm
@@ -27,7 +30,7 @@ PROJECT CONFIGURATION
 
     PyCharm project configuration type: Python
 
-        note: We didn't use the PyCharm's Flask configuration because we couldn't configurer the FLASK_APP parameter
+        note: We didn't use the PyCharm's Flask configuration because we couldn't configure the FLASK_APP parameter
         properly with this configuration. So we use a standard PyCharm's Python project configuration.
 
         Module name: flask
