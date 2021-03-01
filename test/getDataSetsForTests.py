@@ -13,17 +13,17 @@ def getInvalidProductDicts():
     pDicts.append(product)
 
     # invalid name
-    product = {"id": 1, "name": [1, 2, 3, 4], "type": "dairy", "description": "Raw organic brown eggs in a basket",
+    product = {"id": "1", "name": [1, 2, 3, 4], "type": "dairy", "description": "Raw organic brown eggs in a basket",
                "image": "0.jpg", "height": 600, "weight": 400, "price": 28.1, "rating": 5, "in_stock": True}
     pDicts.append(product)
 
     # invalid name None
-    product = {"id": 1, "name": None, "type": "dairy", "description": "Raw organic brown eggs in a basket",
+    product = {"id": "1", "name": None, "type": "dairy", "description": "Raw organic brown eggs in a basket",
                "image": "0.jpg", "height": 600, "weight": 400, "price": 28.1, "rating": 5, "in_stock": True}
     pDicts.append(product)
 
     # invalid type
-    product = {"id": 1, "name": "Brown eggs", "type": 2.5, "description": "Raw organic brown eggs in a basket",
+    product = {"id": "1", "name": "Brown eggs", "type": 2.5, "description": "Raw organic brown eggs in a basket",
                "image": "0.jpg", "height": 600, "weight": 400, "price": 28.1, "rating": 5, "in_stock": True}
     pDicts.append(product)
 
@@ -119,48 +119,48 @@ def getInvalidCreditCardDicts():
 
     # invalid id
     cCard = {"id": "1", "name": "Jimmy Girard-Nault", "number": "4242 4242 4242 4242", "expiration_year": 2024,
-             "cvv": 123, "expiration_month": 9}
+             "cvv": "123", "expiration_month": 9}
     cCardDicts.append(cCard)
 
     # invalid id None
-    cCard = {"id": 1, "id": None, "name": "Jimmy Girard-Nault", "number": "4242 4242 4242 4242",
+    cCard = {"id": None, "name": "Jimmy Girard-Nault", "number": "4242 4242 4242 4242",
              "expiration_year": 2024,
-             "cvv": 123, "expiration_month": 9}
+             "cvv": "123", "expiration_month": 9}
     cCardDicts.append(cCard)
 
     # invalid name
     cCard = {"id": 1, "name": 1234, "number": "4242 4242 4242 4242", "expiration_year": 2024,
-             "cvv": 123, "expiration_month": 9}
+             "cvv": "123", "expiration_month": 9}
     cCardDicts.append(cCard)
 
     # invalid name None
     cCard = {"id": 1, "name": None, "number": "4242 4242 4242 4242", "expiration_year": 2024,
-             "cvv": 123, "expiration_month": 9}
+             "cvv": "123", "expiration_month": 9}
     cCardDicts.append(cCard)
 
     # invalid number
     cCard = {"id": 1, "name": "Jimmy Girard-Nault", "number": 4242424242424242, "expiration_year": 2024,
-             "cvv": 123, "expiration_month": 9}
+             "cvv": "123", "expiration_month": 9}
     cCardDicts.append(cCard)
 
     # invalid number None
     cCard = {"id": 1, "name": "Jimmy Girard-Nault", "number": None, "expiration_year": 2024,
-             "cvv": 123, "expiration_month": 9}
+             "cvv": "123", "expiration_month": 9}
     cCardDicts.append(cCard)
 
     # invalid expiration_year
     cCard = {"id": 1, "name": "Jimmy Girard-Nault", "number": "4242 4242 4242 4242", "expiration_year": "2024",
-             "cvv": 123, "expiration_month": 9}
+             "cvv": "123", "expiration_month": 9}
     cCardDicts.append(cCard)
 
     # invalid expiration_year None
     cCard = {"id": 1, "name": "Jimmy Girard-Nault", "number": "4242 4242 4242 4242", "expiration_year": None,
-             "cvv": 123, "expiration_month": 9}
+             "cvv": "123", "expiration_month": 9}
     cCardDicts.append(cCard)
 
     # invalid cvv
     cCard = {"id": 1, "name": "Jimmy Girard-Nault", "number": "4242 4242 4242 4242", "expiration_year": 2024,
-             "cvv": "123", "expiration_month": 9}
+             "cvv": 123, "expiration_month": 9}
     cCardDicts.append(cCard)
 
     # invalid cvv None
@@ -170,17 +170,17 @@ def getInvalidCreditCardDicts():
 
     # invalid expiration_month
     cCard = {"id": 1, "name": "Jimmy Girard-Nault", "number": "4242 4242 4242 4242", "expiration_year": 2024,
-             "cvv": 123, "expiration_month": "9"}
+             "cvv": "123", "expiration_month": "9"}
     cCardDicts.append(cCard)
 
     # invalid expiration_month None
     cCard = {"id": 1, "name": "Jimmy Girard-Nault", "number": "4242 4242 4242 4242", "expiration_year": 2024,
-             "cvv": 123, "expiration_month": None}
+             "cvv": "123", "expiration_month": None}
     cCardDicts.append(cCard)
 
     # missing field (name)
     cCard = {"id": 1, "number": "4242 4242 4242 4242", "expiration_year": 2024,
-             "cvv": 123, "expiration_month": None}
+             "cvv": "123", "expiration_month": None}
     cCardDicts.append(cCard)
 
     return cCardDicts
@@ -293,61 +293,61 @@ def getInvalidOrderDicts():
 
     # invalid id
     o = {"id": "a", "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": 1, "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # invalid id None
     o = {"id": None, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": 1, "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # invalid shipping information
     o = {"id": 1, "shipping_information": "1", "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": 1, "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # invalid creditcard
     o = {"id": 1, "shipping_information": 1, "credit_card": "1", "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": 1, "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # invalid email
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": 1,
-         "total_price": 124.5, "transaction": 1, "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # invalid total_price
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": "124.5", "transaction": 1, "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": "124.5", "transaction": "1", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # invalid transaction
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": 1, "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # invalid paid
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1", "paid": "False", "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1", "paid": "False", "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # invalid paid None
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1", "paid": None, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1", "paid": None, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # invalid product
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1", "paid": False, "product": "1", "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1", "paid": False, "product": 1, "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
@@ -359,19 +359,19 @@ def getInvalidOrderDicts():
 
     # invalid product_quantity
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1", "paid": False, "product": 1, "product_quantity": "2",
+         "total_price": 124.5, "transaction": "1", "paid": False, "product": "1", "product_quantity": "2",
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # invalid product_quantity None
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1", "paid": False, "product": 1, "product_quantity": None,
+         "total_price": 124.5, "transaction": "1", "paid": False, "product": "1", "product_quantity": None,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # invalid shipping_price
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": "2.50"}
     oDicts.append(o)
 
@@ -550,7 +550,7 @@ def getValidProductDict():
     pDicts = []
 
     # normal
-    product = {"id": 1, "name": "Brown eggs", "type": "dairy", "description": "Raw organic brown eggs in a basket",
+    product = {"id": "1", "name": "Brown eggs", "type": "dairy", "description": "Raw organic brown eggs in a basket",
                "image": "0.jpg", "height": 600, "weight": 400, "price": 28.1, "rating": 5, "in_stock": True}
     pDicts.append(product)
 
@@ -562,12 +562,12 @@ def getValidCreditCardDicts():
 
     # explicit id
     cCard = {"id": 1, "name": "Jimmy Girard-Nault", "number": "4242 4242 4242 4242", "expiration_year": 2024,
-             "cvv": 123, "expiration_month": 9}
+             "cvv": "123", "expiration_month": 9}
     cCardDicts.append(cCard)
 
     # without id (auto incremented field)
     cCard = {"name": "Jimmy Girard-Nault", "number": "4242 4242 4242 4242", "expiration_year": 2024,
-             "cvv": 123, "expiration_month": 9}
+             "cvv": "123", "expiration_month": 9}
     cCardDicts.append(cCard)
 
     return cCardDicts
@@ -608,84 +608,84 @@ def getValidOrderDicts():
 
     # explicit id
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1234", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1234", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # without id
     o = {"shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1234", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1234", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # shipping_information None
     o = {"id": 1, "shipping_information": None, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1234", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1234", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # without shiiping_information
     o = {"id": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1234", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1234", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # credit_card None
     o = {"id": 1, "shipping_information": 1, "credit_card": None, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1234", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1234", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # credit_card missing
     o = {"id": 1, "shipping_information": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1234", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1234", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # email None
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": None,
-         "total_price": 124.5, "transaction": "1234", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1234", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # email missing
     o = {"id": 1, "shipping_information": 1, "credit_card": 1,
-         "total_price": 124.5, "transaction": "1234", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1234", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # total_price None
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": None, "transaction": "1234", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": None, "transaction": "1234", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # total_price missing
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "transaction": "1", "paid": False, "product": 1, "product_quantity": 2, "shipping_price": 2.50}
+         "transaction": "1", "paid": False, "product": "1", "product_quantity": 2, "shipping_price": 2.50}
     oDicts.append(o)
 
     # transaction none
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": None, "paid": True, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": None, "paid": True, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # transaction missing
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # paid missing
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1234", "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1234", "product": "1", "product_quantity": 2,
          "shipping_price": 2.50}
     oDicts.append(o)
 
     # shipping_price None
     o = {"id": 1, "shipping_information": 1, "credit_card": 1, "email": "j.gnault@uqac.ca",
-         "total_price": 124.5, "transaction": "1234", "paid": False, "product": 1, "product_quantity": 2,
+         "total_price": 124.5, "transaction": "1234", "paid": False, "product": "1", "product_quantity": 2,
          "shipping_price": None}
     oDicts.append(o)
 

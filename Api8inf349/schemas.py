@@ -3,7 +3,7 @@ from schema import Schema, And, Use, Optional, SchemaError, Or
 # for insert validation
 # note: the schema doesn't test the integrity constraint because the data base will check it.
 ProductSchema = Schema({
-    'id': int,
+    'id': And(str, lambda ID: ID.isnumeric()),
     'name': str,
     'type': str,
     'description': str,
@@ -69,7 +69,7 @@ OrderSchema = Schema({
     Optional('total_price'): Or(float, None),
     Optional('transaction'): Or(str, None),
     Optional('paid'): bool,  # this field has default value
-    'product': int,
+    'product': str,
     'product_quantity': int,
     Optional('shipping_price'): Or(float, None)
 })

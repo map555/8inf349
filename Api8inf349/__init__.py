@@ -7,4 +7,3 @@ def create_app(initial_config=None):
     init_app(app)
     return app
 
-
