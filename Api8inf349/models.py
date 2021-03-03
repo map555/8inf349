@@ -6,7 +6,7 @@ from peewee import Model, SqliteDatabase, AutoField, CharField, ForeignKeyField,
 
 
 def get_db_path():
-    return os.environ.get('DATABASE', './db.sqlite')
+    return os.environ.get('DATABASE', '../db.sqlite')
 
 
 class BaseModel(Model):

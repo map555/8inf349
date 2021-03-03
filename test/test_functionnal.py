@@ -4,9 +4,7 @@ from Api8inf349.url import productURL
 from urllib.request import Request, urlopen
 from peewee import Select
 import json
-from Api8inf349.ProductTableInit import CheckExistance_Test
-
-
+from Api8inf349.ProductTableInit import CheckExistance_Test, InitializeProduct
 
 
 def getRequest(url):
@@ -67,3 +65,15 @@ def test_CheckExistance(app):
 
         assert CheckExistance_Test(app, p['products'][0]) == True
 
+
+class TestRoutes(object):
+
+    def test_index(self, app, client):
+        with app.app_context():
+            InitializeProduct()
+
+            response = client.get("/")
+            assert response.status_code == 200
+            jsonResponse = json.loads(response.get_data())
+            assert jsonResponse["products"] is not None
+            assert len(jsonResponse["products"]) == 50

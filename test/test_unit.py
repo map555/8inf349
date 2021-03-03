@@ -1,6 +1,7 @@
 from Api8inf349.models import Product, Transaction
 from Api8inf349.schemasValidation import *
 from getDataSetsForTests import *
+from Api8inf349.models import Order, Product
 import pytest
 
 """Because SQLite doesn't force type and peewee doesn't return an error if you try to do weird stuff like
@@ -88,3 +89,62 @@ def test_InvalidClientInfoDictionnary(cInfoDict):
 @pytest.mark.parametrize("cInfoDict", getValidClientInfoDict())
 def test_ValidClientInfoDictionnary(cInfoDict):
     assert ValidateClientInfoSchema(cInfoDict) == True
+
+def test_set_order_total_price():
+    product_price = 200
+    product_quantity = 2
+    total_price = product_price*product_quantity
+
+    product = Product(id="1", name="product 1", type="type 1", description="description 1", image="image 1", price=product_price)
+
+    order = Order(product=product, product_quantity=product_quantity)
+
+    order.setTotalPrice()
+
+    assert order.total_price == total_price
+
+def test_set_order_shipping_price_with_499g_weight():
+
+    product_price = 200
+    product_quantity = 1
+    product_weight = 499
+
+    product = Product(id="1", name="product 1", type="type 1", description="description 1", image="image 1",
+                      price=product_price, weight=product_weight)
+
+    order = Order(product=product, product_quantity=product_quantity)
+
+    order.setShippingPrice()
+
+    assert order.shipping_price == 5.00
+
+def test_set_order_shipping_price_with_1999g_weight():
+
+    product_price = 200
+    product_quantity = 1
+    product_weight = 1999
+
+    product = Product(id="1", name="product 1", type="type 1", description="description 1", image="image 1",
+                      price=product_price, weight=product_weight)
+
+    order = Order(product=product, product_quantity=product_quantity)
+
+    order.setShippingPrice()
+
+    assert order.shipping_price == 10.00
+
+def test_set_order_shipping_price_with_2001g_weight():
+
+    product_price = 200
+    product_quantity = 1
+    product_weight = 2001
+
+    product = Product(id="1", name="product 1", type="type 1", description="description 1", image="image 1",
+                      price=product_price, weight=product_weight)
+
+    order = Order(product=product, product_quantity=product_quantity)
+
+    order.setShippingPrice()
+
+    assert order.shipping_price == 25.00
+
