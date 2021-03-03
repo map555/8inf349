@@ -11,10 +11,6 @@ def create_app(initial_config=None):
     app = Flask(__name__)
     init_app(app)
 
-    @app.route('/hw')
-    def hello_world():
-        return 'Hello World!'
-
     # TODO: implement the test(s)
     @app.route('/')
     def ProductsGET():

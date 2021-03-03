@@ -77,3 +77,5 @@ class TestRoutes(object):
             jsonResponse = json.loads(response.get_data())
             assert jsonResponse["products"] is not None
             assert len(jsonResponse["products"]) == 50
+
+# TODO: test services

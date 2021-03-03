@@ -227,7 +227,6 @@ class OrderServices(object):
 
         return methodOutput
 
-    # TODO: add 3digit string verification for cvv
     @classmethod
     def setCreditCard(cls, cCardDict, orderId):
         methodOutput = {'set': False, "object": {}, "status_code": 422}
@@ -243,7 +242,6 @@ class OrderServices(object):
         elif ValidateCreditCardOrderSchema(cCardOrderDict=cCardDict) is False:
             methodOutput['object'] = getMissingCreditCardFieldErrorDict()
 
-        # check cvv validity
         elif not ((len(cCardDict['credit_card']['cvv']) == 3) and (cCardDict['credit_card']['cvv'].isdigit() is True)):
             methodOutput['object'] = getMissingCreditCardFieldErrorDict()
 
