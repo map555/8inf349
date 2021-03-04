@@ -65,13 +65,13 @@ The app will now be available at http://localhost:5000/
 
 ## Tests
 
-To run tests (in 8inf349 directory):
+To run tests (in project root directory):
 
 ```
 $ python -m pytest test/
 ```
 
-To run tests and generate a html report (in 8inf349 directory):
+To run tests and generate a html report (in project root directory):
 
 ```
 HTML test coverage: python -m pytest --cov-report=html --cov=Api8inf349
