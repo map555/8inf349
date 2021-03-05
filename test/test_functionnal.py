@@ -5,6 +5,7 @@ from urllib.request import Request, urlopen
 from peewee import Select
 import json
 from Api8inf349.ProductTableInit import CheckExistance_Test, InitializeProduct
+from Api8inf349.services import OrderServices
 
 
 def getRequest(url):
@@ -82,14 +83,17 @@ class TestRoutes(object):
 
 class TestServices(object):
 
-    def test_setCreditCard_order_not_found(self, app, client):
-        response = client.put("/order/1", json={
+    def test_setCreditCard_order_not_found(self, app):
+        response = OrderServices.setCreditCard(cCardDict={
             "credit_card": {"name": "John Doe", "number": "4242 4242 4242 4242", "expiration_year": 2024,
-                            "cvv": "123", "expiration_month": 9}})
-        assert response.status_code == 404
-        assert b'Order not found' in response.data
+                            "cvv": "123", "expiration_month": 9}},
+            orderId=1)
 
-    def test_setCreditCard_missing_client_informations(self, app, client):
+        assert response == {'set': False,
+                            "object": {"errors": {"order": {"code": "not-found", "name": "Order not found."}}},
+                            "status_code": 404}
+
+    def test_setCreditCard_missing_client_informations(self, app):
         product = Product(name="Brown eggs", type="dairy",
                           description="Raw organic brown eggs in a basket",
                           image="0.jpg", height=600, weight=400, price=28.1, rating=5, in_stock=True)
@@ -99,13 +103,17 @@ class TestServices(object):
         order = Order(product=product, product_quantity=1)
         order.save()
 
-        response = client.put("/order/1", json={
+        response = OrderServices.setCreditCard(cCardDict={
             "credit_card": {"name": "John Doe", "number": "4242 4242 4242 4242", "expiration_year": 2024,
-                            "cvv": "123", "expiration_month": 9}})
-        assert response.status_code == 422
-        assert b'Client informations are required before applying a credit card to the order.' in response.data
+                            "cvv": "123", "expiration_month": 9}},
+            orderId=1)
 
-    def test_setCreditCard_missing_credit_card_fields(self, app, client):
+        assert response == {'set': False,
+                            "object": {"errors": {"order": {"code": "missing-fields",
+                                                            "name": "Client informations are required before applying a credit card to the order."}}},
+                            "status_code": 422}
+
+    def test_setCreditCard_missing_credit_card_fields(self, app):
         product = Product(name="Brown eggs", type="dairy",
                           description="Raw organic brown eggs in a basket",
                           image="0.jpg", height=600, weight=400, price=28.1, rating=5, in_stock=True)
@@ -122,12 +130,18 @@ class TestServices(object):
         order.setTotalPrice()
         order.save()
 
-        response = client.put("/order/1", json={
-            "credit_card": {"name": "John Doe", "number": "4242 4242 4242 4242", "expiration_year": 2024, "expiration_month": 9}})
-        assert response.status_code == 422
-        assert b'The structure of the credit card dict is invalid or there is a least one missing field.' in response.data
+        response = OrderServices.setCreditCard(cCardDict={
+            "credit_card": {"name": "John Doe", "number": "4242 4242 4242 4242", "expiration_year": 2024,
+                            "expiration_month": 9}},
+            orderId=1)
 
-    def test_setCreditCard_order_already_paid(self, app, client):
+        assert response == {'set': False,
+                            "object": {"errors": {"credit_card": {"code": "missing-fields",
+                                                                  "name": "The structure of the credit card dict is invalid or there is a least " \
+                                                                          "one missing field."}}},
+                            "status_code": 422}
+
+    def test_setCreditCard_order_already_paid(self, app):
         product = Product(name="Brown eggs", type="dairy",
                           description="Raw organic brown eggs in a basket",
                           image="0.jpg", height=600, weight=400, price=28.1, rating=5, in_stock=True)
@@ -144,38 +158,41 @@ class TestServices(object):
         order.setTotalPrice()
         order.save()
 
-        response = client.put("/order/1", json={
+        response = OrderServices.setCreditCard(cCardDict={
             "credit_card": {"name": "John Doe", "number": "4242 4242 4242 4242", "expiration_year": 2024,
-                            "cvv": "123", "expiration_month": 9}})
-        assert response.status_code == 422
-        assert b'The order has already been paid.' in response.data
+                            "cvv": "123", "expiration_month": 9}},
+            orderId=1)
 
+        assert response == {'set': False,
+                            "object": {"errors": {"order": {"code": "already-paid",
+                                                            "name": "The order has already been paid."}}},
+                            "status_code": 422}
 
-    def test_initOrder_missing_fields(self, app, client):
-        response = client.post("/order", json={"product":{"id":1}})
-        assert response.status_code == 422
-        assert b"The creation of an order requires a single product. The product dict must have the following form:" in response.data
+    def test_initOrder_missing_fields(self, app):
+        response = OrderServices.initOrder(data={"product": 1})
+        assert response == {'orderInitialized': False, 'object': {'errors': {
+            'product': {"code": "missing-fields", "name": "The creation of an order requires a single product. " \
+                                                          "The product dict must have the following form: { 'product': " \
+                                                          "{ 'id': id, 'quantity': quantity } }. Quantity must be an integer > 0."}}}}
 
-
-    def test_initOrder_product_unavailable(self, app, client):
+    def test_initOrder_product_unavailable(self, app):
         product = Product(name="Brown eggs", type="dairy",
                           description="Raw organic brown eggs in a basket",
                           image="0.jpg", height=600, weight=400, price=28.1, rating=5, in_stock=False)
         product.save()
 
-        response = client.post("/order", json={"product": {"id": 1, "quantity": 1}})
-        assert response.status_code == 422
-        assert b"The product you asked for is not in the inventory for now." in response.data
+        response = OrderServices.initOrder(data={"product":{"id": 1, "quantity":1}})
+        assert response == {'orderInitialized': False, 'object': {'errors': {
+            'product': {"code": "out-of-inventory", "name": "The product you asked for is not in the inventory for now."}}}}
 
-
-    def test_initOrder_invalid_quantity(self, app, client):
+    def test_initOrder_invalid_quantity(self, app):
         product = Product(name="Brown eggs", type="dairy",
                           description="Raw organic brown eggs in a basket",
                           image="0.jpg", height=600, weight=400, price=28.1, rating=5, in_stock=True)
         product.save()
 
-        response = client.post("/order", json={"product": {"id": 1, "quantity":-1}})
-        assert response.status_code == 422
-        assert b"The creation of an order requires a single product. The product dict must have the following form:" in response.data
-
-
+        response = OrderServices.initOrder(data={"product": {"id": 1, "quantity": -1}})
+        assert response == {'orderInitialized': False, 'object': {'errors': {
+            'product': {"code": "missing-fields", "name": "The creation of an order requires a single product. " \
+                                                          "The product dict must have the following form: { 'product': " \
+                                                          "{ 'id': id, 'quantity': quantity } }. Quantity must be an integer > 0."}}}}
