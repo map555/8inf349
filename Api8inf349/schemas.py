@@ -1,7 +1,7 @@
-from schema import Schema, And, Use, Optional, SchemaError, Or
+from schema import Schema, And, Optional, Or
 
 # for insert validation
-# note: the schema doesn't test the integrity constraint because the data base will check it.
+# note: the schema doesn't test the integrity constraint because the database will check it.
 ProductSchema = Schema({
     'id': And(str, lambda ID: ID.isnumeric()),
     'name': str,

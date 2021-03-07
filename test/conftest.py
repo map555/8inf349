@@ -1,5 +1,4 @@
 import os
-import tempfile
 
 os.environ['DATABASE'] = ":memory:"
 import pytest

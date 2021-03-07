@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, request, redirect, url_for, abort
+from flask import Flask, request, redirect, url_for
 
 from Api8inf349.ProductTableInit import InitializeProduct
 from Api8inf349.models import init_app, Product, Transaction, CreditCard, ShippingInformation
@@ -11,7 +11,6 @@ def create_app(initial_config=None):
     app = Flask(__name__)
     init_app(app)
 
-    # TODO: implement the test(s)
     @app.route('/')
     def ProductsGET():
         prod = Product.select()
@@ -23,7 +22,6 @@ def create_app(initial_config=None):
 
         return app.response_class(response=json.dumps(prodsDict), status=200, mimetype='application/json')
 
-    # TODO: implement the test(s)
     @app.route('/order', methods=['POST'])
     def CreateOrder():
         r = request.get_json(force=True)
@@ -51,8 +49,6 @@ def create_app(initial_config=None):
 
         else:  # elif "credit_card" in dataDict:
             response = OrderServices.setCreditCard(cCardDict=dataDict, orderId=order_id)
-
-        # TODO: invalid dict case (maybe)
 
         return app.response_class(response=json.dumps(response['object']), status=response['status_code'],
                                   mimetype='application/json')

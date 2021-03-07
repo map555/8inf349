@@ -84,7 +84,6 @@ def CheckAvailability(pID):
     else:
         return False
 
-#app au complet, parce que pour tester tous les cas, faut que t'appelle tout.
 def createOrderDict(orderModelObject):
     orderDict = {'id': orderModelObject.id, 'shipping_information': {}, 'credit_card': {},
                  'email': orderModelObject.email, 'total_price': orderModelObject.total_price, 'transaction': {},
@@ -283,6 +282,11 @@ class OrderServices(object):
                     methodOutput['object'] = createOrderDict(orderModelObject=o)
 
                 else:
+                    '''
+                    On ne vérifie pas si le numéro de carte de crédit est 4242 4242 4242 4242 ou 4000 0000 0000 0002 car 
+                    ça devrait être l'api distant qui le fait, donc on ne fait que transmettre le message d'erreur de l'api
+                    distant au client lorsqu'il y en a un.
+                    '''
                     methodOutput['object'] = getCreditCardDeclinedErrorDict(responseDict)
 
         return methodOutput

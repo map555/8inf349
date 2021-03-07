@@ -3,7 +3,6 @@ from Api8inf349.url import productURL
 import json
 from Api8inf349.schemasValidation import ValidateProductListSchema
 from Api8inf349.models import Product
-from peewee import Model
 
 
 def getRequest(url):
@@ -25,15 +24,12 @@ def ConvertResponseToJson(response):
     return jsn
 
 
-
-
 def getProducts():
     response = getRequest(url=productURL)
     jsonDict = ConvertResponseToJson(response=response)
     return jsonDict
 
 
-# for testing...
 def CheckExistance_Test(app, jsonProduct):
     with app.app_context():
 
