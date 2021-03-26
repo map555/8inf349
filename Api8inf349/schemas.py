@@ -19,11 +19,13 @@ ProductListSchema = Schema({
     'products': [ProductSchema]
 })
 
+ProductOrderBasicSchema = Schema({
+    "id": int,
+    "quantity": int
+})
+
 ProductOrderSchema = Schema({
-    "product": {
-        "id": int,
-        "quantity": int
-    }
+    "product": [ProductOrderBasicSchema]
 })
 
 ShippingInformationSchema = Schema({

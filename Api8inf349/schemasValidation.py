@@ -14,6 +14,10 @@ def ValidateProductListSchema(pListDict):
     return ProductListSchema.is_valid(pListDict)
 
 
+def ValidateBasicProductOrderSchema(pBasicOrderDict):
+    return ProductOrderBasicSchema.is_valid(pBasicOrderDict)
+
+
 def ValidateProductOrderSchema(pOrderDict):
     return ProductOrderSchema.is_valid(pOrderDict)
 
