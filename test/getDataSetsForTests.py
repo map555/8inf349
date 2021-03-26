@@ -460,7 +460,7 @@ def getInvalidClientInfoDicts():
 def getInvalidProductOrderDicts():
     pOrderDict = []
 
-    # missing product
+    # missing product and invalid list
     pOrder = {
         "id": 1,
         "quantity": 2
@@ -469,81 +469,132 @@ def getInvalidProductOrderDicts():
 
     # invalid id
     pOrder = {
-        "product": {
+        "product": [{
             "id": "1",
             "quantity": 2
-        }
+        }]
     }
     pOrderDict.append(pOrder)
 
     # id None
     pOrder = {
-        "product": {
+        "product": [{
             "id": None,
             "quantity": 2
-        }
+        }]
     }
     pOrderDict.append(pOrder)
 
     # missing id
     pOrder = {
-        "product": {
+        "product": [{
             "quantity": 2
-        }
+        }]
     }
     pOrderDict.append(pOrder)
 
     # invalid quantity
     pOrder = {
-        "product": {
+        "product": [{
             "id": 1,
             "quantity": "2"
-        }
+        }]
     }
     pOrderDict.append(pOrder)
 
     #  quantity None
     pOrder = {
-        "product": {
+        "product": [{
             "id": 1,
             "quantity": None
-        }
+        }]
     }
     pOrderDict.append(pOrder)
 
     # missing quantity
     pOrder = {
-        "product": {
+        "product": [{
             "id": 1
-        }
+        }]
     }
     pOrderDict.append(pOrder)
 
-    # 2 products
+    # 2 products extra field
+    pOrder = {
+        "product": [
+            {
+                "id": 1,
+                "quantity": 2
+            },
+            {
+                "id": 2,
+                "quantity": 2,
+                "extra_field": "blablabla"
+            }],
+
+    }
+    pOrderDict.append(pOrder)
+
+    # extra field 2
     pOrder = {
         "product": [{
             "id": 1,
             "quantity": 2
-        },
-            {
-                "id": 2,
-                "quantity": 2
-            }]
-    }
-    pOrderDict.append(pOrder)
-
-    # extra field
-    pOrder = {
-        "product": {
-            "id": 1,
-            "quantity": 2
-        },
+        }],
 
         "extra_field": 1
     }
     pOrderDict.append(pOrder)
 
     return pOrderDict
+
+
+def getInvalidBasicProductOrderDict():
+    pOrderDicts = []
+
+    pBasicOrder = {"id": "asd", "quantity": 1}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={"id": 2.5, "quantity": 1}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={"id": True, "quantity": 1}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={"id": ["asd"], "quantity": 1}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={"id": {"asd":1}, "quantity": 1}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={"id": 1, "quantity": "1"}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={"id": 1, "quantity": 2.5}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={"id": 1, "quantity": False}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={"id": 1, "quantity": [1]}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={"id": 1, "quantity": {"1":1}}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={ "quantity": 1}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={"id": 1}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={}
+    pOrderDicts.append(pBasicOrder)
+
+    pBasicOrder={"id": 1, "quantity": 1,"extra":{"extra_content":"asdasds"}}
+    pOrderDicts.append(pBasicOrder)
+
+    return pOrderDicts
 
 
 def getValidProductDict():
@@ -711,13 +762,40 @@ def getValidClientInfoDict():
 
 
 def getValidProductOrderDict():
-    pOrderDict = []
+    pOrderDicts = []
     pOrder = {
-        "product": {
-            "id": 1,
-            "quantity": 2
-        }
+        "product": [
+            {
+                "id": 1,
+                "quantity": 2
+            }
+        ]
     }
-    pOrderDict.append(pOrder)
+    pOrderDicts.append(pOrder)
 
-    return pOrderDict
+    pOrder = {
+        "product": [
+            {
+                "id": 1,
+                "quantity": 2
+            },
+            {
+                "id": 2,
+                "quantity": 1
+            }
+        ]
+    }
+    pOrderDicts.append(pOrder)
+
+    return pOrderDicts
+
+
+def getValidBasicProductOrderDict():
+    bpOrderDict=[]
+    bpOrder = {
+        "id": 1,
+        "quantity": 2
+    }
+    bpOrderDict.append(bpOrder)
+
+    return bpOrderDict
