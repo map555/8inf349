@@ -3,7 +3,7 @@ import json
 from flask import Flask, request, redirect, url_for
 
 from Api8inf349.ProductTableInit import InitializeProduct
-from Api8inf349.models import init_app, Product, Transaction, CreditCard, ShippingInformation
+from Api8inf349.models import init_app, Product, Transaction, CreditCard, ShippingInformation,init_Product
 from Api8inf349.services import OrderServices
 
 
@@ -59,5 +59,6 @@ def create_app(initial_config=None):
 
 if __name__ == '__main__':
     create_app().run()
+    init_Product()
     InitializeProduct()
 

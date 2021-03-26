@@ -1,4 +1,4 @@
-from Api8inf349.models import Product, Order, Transaction, CreditCard, ShippingInformation
+from Api8inf349.models import Product, Order, Transaction, CreditCard, ShippingInformation, ProductOrdered
 from peewee import DoesNotExist
 from Api8inf349.schemas import ClientInfoSchema
 from Api8inf349.schemasValidation import ValidateClientInfoSchema, ValidateProductOrderSchema, \
@@ -12,7 +12,8 @@ def getMissingProductFieldErrorDict():
     dict['errors']['product']['code'] = "missing-fields"
     dict['errors']['product']['name'] = "The creation of an order requires a single product. " \
                                         "The product dict must have the following form: { 'product': " \
-                                        "{ 'id': id, 'quantity': quantity } }. Quantity must be an integer > 0."
+                                        "[{ 'id': id1, 'quantity': quantity1 }, { 'id': id2, 'quantity': quantity2 }]" \
+                                        " }. Quantity must be an integer > 0."
 
     return dict
 
@@ -65,7 +66,7 @@ def getMissingOrderFieldErrorDict():
 
 def getPaymentApiStatusCodeError(statusCode):
     dict = {"errors": {"payment_API": {"code": "", "name": ""}}}
-    dict['errors']['payment_API']['code'] = "Paymen API status code"
+    dict['errors']['payment_API']['code'] = "Payment API status code"
     dict['errors']['payment_API']['name'] = "Payment API returned HTTP status code " + str(statusCode) + "."
     return dict
 
@@ -84,13 +85,19 @@ def CheckAvailability(pID):
     else:
         return False
 
+
 def createOrderDict(orderModelObject):
+    products = ProductOrdered.select(ProductOrdered.product, ProductOrdered.product_quantity).where(
+        ProductOrdered.order == orderModelObject.id)
+
+    pList = []
+    for p in products:
+        product = {'product_id': p.product.id, 'product_quantity': p.product_quantity}
+        pList.append(product)
+
     orderDict = {'id': orderModelObject.id, 'shipping_information': {}, 'credit_card': {},
                  'email': orderModelObject.email, 'total_price': orderModelObject.total_price, 'transaction': {},
-                 'paid': orderModelObject.paid, 'product': {'product_id': orderModelObject.product.id,
-                                                            'product_quantity': orderModelObject.product_quantity},
-                 'shipping_price':
-                     orderModelObject.shipping_price}
+                 'paid': orderModelObject.paid, 'product': pList, 'shipping_price': orderModelObject.shipping_price}
 
     if orderModelObject.shipping_information is not None:
         orderDict['shipping_information'] = {'id': orderModelObject.shipping_information.id,
@@ -127,13 +134,27 @@ def getMissingFieldErrorDict():
 
 def ValidateRequiredFieldsForCCard(order):
     if ((((order.product.id is not None) and (order.product_quantity is not None)) and ((order.email is not None)
-        and (order.shipping_information.id is not None))) and ((order.total_price is not None) and
-                                                               (order.shipping_price is not None))):
+                                                                                        and (
+                                                                                                order.shipping_information.id is not None))) and (
+            (order.total_price is not None) and
+            (order.shipping_price is not None))):
 
         return True
 
     else:
         return False
+
+
+def ValidateOrder(pList):
+    for p in pList:
+
+        if CheckAvailability(p["id"]) is False:
+            return getMissingProductFieldErrorDict()
+
+        if CheckQuantity(p["quantity"]) is False:
+            return getAvailabilityProductErrorDict()
+
+    return True
 
 
 class OrderServices(object):
@@ -146,33 +167,35 @@ class OrderServices(object):
         is not respected, object will contain a dict with the first error."""
 
         if ValidateProductOrderSchema(pOrderDict=data) is True:
-            pQuantity = data['product']['quantity']
-            pID = data['product']['id']
 
-            if CheckAvailability(pID=pID) is True:
+            pList = data['product']
 
-                if CheckQuantity(pQuantity=pQuantity) is True:
+            validation = ValidateOrder(pList=pList)
 
-                    order = Order.create(product=pID, product_quantity=pQuantity)
-                    order.setTotalPrice()
-                    order.setShippingPrice()
-                    order.save()
+            if validation is not True:
+                response['object'] = validation
+                return response
 
-                    response['orderInitialized'] = True
-                    response['object'] = order
+            order = Order.create()
+            id = order.id
+            order.save()
 
-                else:
-                    errordict = getMissingProductFieldErrorDict()
-                    response['object'] = errordict
+            for p in pList:
+                pOrdered = ProductOrdered(order=id, product=p["id"], product_quantity=p["quantity"])
+                pOrdered.save()
 
-            else:
-                errordict = getAvailabilityProductErrorDict()
-                response['object'] = errordict
+            products = ProductOrdered.select(ProductOrdered.product, ProductOrdered.product_quantity).where(
+                ProductOrdered.order == id)
+
+            order.setTotalPrice(products=products)
+            order.setShippingPrice(products=products)
+            order.save()
+
+            response['orderInitialized'] = True
+            response['object'] = order
 
         else:
-
-            errordict = getMissingProductFieldErrorDict()
-            response['object'] = errordict
+            response['object'] = getMissingProductFieldErrorDict()
 
         return response
 

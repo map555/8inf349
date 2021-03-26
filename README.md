@@ -7,7 +7,7 @@ Make sure that these libraries are installed:
 ```
     OS:
         Ubuntu 20.04.2LTS
-        Windows 10 Pro 64bits V20H2
+        Windows 10 64bits V20H2
 
     Python version:
         Python 3.8.5

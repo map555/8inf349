@@ -63,6 +63,7 @@ TransactionSchema = Schema({
     'amount_charged': Or(float, None)
 })
 
+# à modifier
 OrderSchema = Schema({
     Optional('id'): int,  # auto incremented id
     Optional('shipping_information'): Or(int, None),  # this field allows null and has a default value

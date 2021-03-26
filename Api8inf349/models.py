@@ -3,6 +3,7 @@ import click
 from flask.cli import with_appcontext
 from peewee import Model, SqliteDatabase, AutoField, CharField, ForeignKeyField, IntegerField, FloatField, BooleanField, \
     Check
+import requests
 
 
 def get_db_path():
@@ -71,38 +72,52 @@ class Order(BaseModel):
     total_price = FloatField(null=True, default=None, constraints=[Check('total_price>0')])
     transaction = ForeignKeyField(Transaction, null=True, default=None)
     paid = BooleanField(null=False, default=False)
-    product = ForeignKeyField(Product, null=False)
-    product_quantity = IntegerField(null=False)
     shipping_price = FloatField(null=True, constraints=[Check('shipping_price>=0')])
 
-    def setTotalPrice(self):
-        self.total_price = self.product.price * self.product_quantity
+    def setTotalPrice(self, products):
 
-    def setShippingPrice(self):
-        if (self.product_quantity * self.product.weight) < 500:
+        sum = 0
+        for p in products:
+            sum += (p.product.price * p.product_quantity)
+
+        self.total_price = sum
+
+    def setShippingPrice(self, products):
+        totalWeight = 0
+        for p in products:
+            totalWeight += (p.product.weight * p.product_quantity)
+
+        if totalWeight < 500:
             self.shipping_price = 5.00
-        elif (self.product_quantity * self.product.weight) < 2000:
+        elif totalWeight < 2000:
             self.shipping_price = 10.00
         else:
             self.shipping_price = 25.00
+
+
+class ProductOrdered(BaseModel):
+    id = AutoField(primary_key=True)
+    order = ForeignKeyField(Order, null=False)
+    product = ForeignKeyField(Product, null=False)
+    product_quantity = IntegerField(null=False)
 
 
 @click.command("init-db")
 @with_appcontext
 def init_db_command():
     database = SqliteDatabase(get_db_path())
-    database.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order])
+    database.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order,ProductOrdered])
     click.echo("Initialized the database.")
 
 
 def init_Product():
     database = SqliteDatabase(get_db_path())
-    database.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order])
+    database.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order,ProductOrdered])
 
 
 def dropProduct():
     database = SqliteDatabase(get_db_path())
-    database.drop_tables([Product, ShippingInformation, CreditCard, Transaction, Order])
+    database.drop_tables([Product, ShippingInformation, CreditCard, Transaction, Order,ProductOrdered])
 
 
 def init_app(app):
