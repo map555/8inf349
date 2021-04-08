@@ -1,7 +1,7 @@
-from Api8inf349.models import Product, Transaction
-from Api8inf349.schemasValidation import *
+from api8inf349.models import Product, Transaction
+from api8inf349.schemas_validation import *
 from getDataSetsForTests import *
-from Api8inf349.models import Order, Product
+from api8inf349.models import Order, Product
 import pytest
 
 

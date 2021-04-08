@@ -1,11 +1,11 @@
 import pytest
-from Api8inf349.models import Product, Order, ShippingInformation
-from Api8inf349.url import productURL
+from api8inf349.models import Product, Order, ShippingInformation
+from api8inf349.url import productURL
 from urllib.request import Request, urlopen
 from peewee import Select
-import json
-from Api8inf349.ProductTableInit import CheckExistance_Test, InitializeProduct
-from Api8inf349.services import OrderServices
+import json2
+from api8inf349.product_table_init import CheckExistance_Test, InitializeProduct
+from api8inf349.services import OrderServices
 
 
 def getRequest(url):
@@ -17,7 +17,7 @@ def getRequest(url):
 def convertResponseToJson(response):
     jsn = None
     try:
-        jsn = json.loads(response.read())
+        jsn = json2.loads(response.read())
     except Exception as exept:
         print(exept)
     return jsn
@@ -76,7 +76,7 @@ class TestRoutes(object):
 
             response = client.get("/")
             assert response.status_code == 200
-            jsonResponse = json.loads(response.get_data())
+            jsonResponse = json2.loads(response.get_data())
             assert jsonResponse["products"] is not None
             assert len(jsonResponse["products"]) == 50
 

@@ -1,8 +1,8 @@
 import pytest
-import json
+import json2
 
-from Api8inf349 import InitializeProduct, Product
-from Api8inf349.models import Order, ShippingInformation
+from api8inf349 import InitializeProduct, Product
+from api8inf349.models import Order, ShippingInformation
 
 
 class TestOrder(object):
@@ -10,13 +10,13 @@ class TestOrder(object):
         with app.app_context():
             InitializeProduct()
 
-            response = client.post("/order", json={"product": {"quantity": 1, "id": 1}})
+            response = client.post("/order", json={"product": [{"quantity": 1, "id": 1},{"quantity": 1, "id": 2}]})
             assert response.status_code == 302
             assert response.location == "http://localhost/order/1"
 
             response = client.get("/order/1")
             assert response.status_code == 200
-            jsonResponse = json.loads(response.get_data())
+            jsonResponse = json2.loads(response.get_data())
             assert jsonResponse['product']['product_quantity'] == 1
             assert jsonResponse['product']['product_id'] == 1
 
@@ -27,7 +27,7 @@ class TestOrder(object):
                                                                                        "city": "Chicoutimi",
                                                                                        "province": "QC"}}})
             assert response.status_code == 200
-            jsonResponse = json.loads(response.get_data())
+            jsonResponse = json2.loads(response.get_data())
             assert jsonResponse['email'] == "firstclient@uqac.ca"
             assert jsonResponse['shipping_information']['country'] == "Canada"
             assert jsonResponse['shipping_information']['address'] == "201, rue des rosiers"
@@ -39,7 +39,7 @@ class TestOrder(object):
                 "credit_card": {"name": "John Doe", "number": "4242 4242 4242 4242", "expiration_year": 2024,
                                 "cvv": "123", "expiration_month": 9}})
             assert response.status_code == 200
-            jsonResponse = json.loads(response.get_data())
+            jsonResponse = json2.loads(response.get_data())
             assert jsonResponse['credit_card']['name'] == 'John Doe'
             assert jsonResponse['credit_card']['number'] == "4242 4242 4242 4242"
             assert jsonResponse['credit_card']['expiration_year'] == 2024
