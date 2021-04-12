@@ -23,7 +23,7 @@ def getDB():
 class BaseModel(Model):
     class Meta:
 
-        database = PostgresqlDatabase(url=os.environ.get("DATABASE_URL")
+        database = PostgresqlDatabase(url=os.environ.get("DATABASE_URL"))
 
 
 class Product(BaseModel):
