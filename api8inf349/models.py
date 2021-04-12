@@ -22,8 +22,8 @@ def getDB():
 
 class BaseModel(Model):
     class Meta:
-        print(os.environ["DATABASE_URL"])
-        database = PostgresqlDatabase(url=os.environ.get("DATABASE_URL"))
+
+        database = PostgresqlDatabase(url=getDB())
 
 
 class Product(BaseModel):
@@ -123,7 +123,7 @@ class PaymentError(BaseModel):
 @with_appcontext
 def init_db_command():
 
-    db = PostgresqlDatabase(os.environ["DB_NAME"], **getDB())
+    db = PostgresqlDatabase(url=getDB())
     db.drop_tables([Product, ShippingInformation, CreditCard, Transaction, Order, ProductOrdered,PaymentError])
     db.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order, ProductOrdered,PaymentError])
     click.echo("Initialized the database.")
