@@ -1,2 +1,2 @@
-run: flask run
-init: flask init-db
+run:  FLASK_APP=api8inf349 flask run
+init: FLASK_APP=api8inf349 flask init-db
