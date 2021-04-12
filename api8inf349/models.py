@@ -14,13 +14,23 @@ from peewee import Model,TextField, TimestampField, AutoField, CharField, Foreig
 
 
 def getDB():
-    return {"host": os.environ["DB_HOST"], "user": os.environ["DB_USER"], "password": os.environ["DB_PASSWORD"],
-            "port": os.environ["DB_PORT"]}
+
+
+    try:
+        db_settings={"name":os.environ["DB_NAME"],"host": os.environ["DB_HOST"], "user": os.environ["DB_USER"],
+                     "password": os.environ["DB_PASSWORD"],"port": os.environ["DB_PORT"]}
+    except:
+        db_settings={"url":os.environ["DATABASE_URL"]}
+
+
+
+    return db_settings
 
 
 class BaseModel(Model):
     class Meta:
-        database = PostgresqlDatabase(os.environ["DB_NAME"], **getDB())
+
+        database = PostgresqlDatabase(**getDB())
 
 
 class Product(BaseModel):
