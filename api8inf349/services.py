@@ -1,4 +1,4 @@
-from api8inf349.models import Product, Order, Transaction, CreditCard, ShippingInformation, ProductOrdered
+from api8inf349.models import Product, Order, Transaction, CreditCard, ShippingInformation, ProductOrdered, PaymentError
 from api8inf349.schemas_validation import ValidateClientInfoSchema, ValidateProductOrderSchema, \
     ValidateCreditCardOrderSchema
 from api8inf349.url import paymentAPIURL
@@ -6,6 +6,7 @@ import requests
 from api8inf349.db import getRedis
 import pickle
 from peewee import fn
+import json
 
 
 def getMissingProductFieldErrorDict():
@@ -40,15 +41,6 @@ def getMissingCreditCardFieldErrorDict():
     return dict
 
 
-def getCreditCardDeclinedErrorDict(apiResponse):
-    error = {"errors": {"credit_card": {"code": "", "payment_API_Response": ""}}}
-    error['errors']['credit_card']['code'] = "card-declined"
-    error['errors']['credit_card']['payment_API_Response'] = apiResponse
-
-    dict = {"status_code": 422, "object": error}
-    return dict
-
-
 def getOrderAlreadyPaidErrorDict():
     error = {"errors": {"order": {"code": "", "name": ""}}}
     error['errors']['order']['code'] = "already-paid"
@@ -79,13 +71,24 @@ def getMissingOrderFieldErrorDict():
     return dict
 
 
-def getPaymentApiStatusCodeError(statusCode):
-    error = {"errors": {"payment_API": {"code": "", "name": ""}}}
-    error['errors']['payment_API']['code'] = "Payment API status code"
-    error['errors']['payment_API']['name'] = "Payment API returned HTTP status code " + str(statusCode) + "."
+def getPaymentApiSError(code, apiResponse, orderModelObject):
+    fullOrderDict = createOrderDict(orderModelObject=orderModelObject)
 
-    dict = {"status_code": 422, "object": error}
-    return dict
+    """
+    Dans l'exemple dans l'énoncé du travail, il était question d'un attribut "code".
+    Cependant, l'api de paiment ne retourne pas cet attribut. Par conséquent, il n'est pas présent
+    dans notre implémentation.
+    """
+    error = {"name": apiResponse['message']}
+    fullOrderDict["object"]['transaction'] = {"success": apiResponse['success'], "error": error, "amount_charged": 0}
+    fullOrderDict["status_code"] = code
+
+    # store the error in the database
+    PaymentError.create(order=orderModelObject, error=json.dumps(error))
+    # dbError=PaymentError.get_or_none(PaymentError.order==orderModelObject)
+    # print("id: ",dbError.id,"\torderID: ",orderModelObject,"\terror:",("\n"+str(error)),"\ntimestamp: ",dbError.time)
+
+    return fullOrderDict
 
 
 def CheckQuantity(pQuantity):
@@ -310,12 +313,13 @@ class OrderServices(object):
             cCardDict["amount_charged"] = o.total_price + o.shipping_price
             paymentAPIResponse = requests.post(url=paymentAPIURL, json=cCardDict)
             statusCode = paymentAPIResponse.status_code
+            apiResponseDict = paymentAPIResponse.json()
             if statusCode != 200:
-                response = getPaymentApiStatusCodeError(statusCode=statusCode)
+                response = getPaymentApiSError(code=statusCode, apiResponse=apiResponseDict, orderModelObject=o)
 
             else:
-                responseDict = paymentAPIResponse.json()
-                if "credit_card" in responseDict:
+
+                if "credit_card" in apiResponseDict:
 
                     cCard = cCardDict["credit_card"]
                     ccModelObject = CreditCard.get_or_none(CreditCard.number == cCard['number'],
@@ -324,12 +328,13 @@ class OrderServices(object):
                         ccModelObject = CreditCard(name=cCard['name'], number=cCard['number'],
                                                    expiration_month=cCard['expiration_month'],
                                                    expiration_year=cCard['expiration_year'], cvv=cCard['cvv'])
+                        ccModelObject.save()
 
                         o.credit_card = ccModelObject
 
-                    t = Transaction.create(id=responseDict['transaction']['id'],
-                                           success=responseDict['transaction']['success'],
-                                           amount_charged=responseDict['transaction']['amount_charged'])
+                    t = Transaction.create(id=apiResponseDict['transaction']['id'],
+                                           success=apiResponseDict['transaction']['success'],
+                                           amount_charged=apiResponseDict['transaction']['amount_charged'])
                     o.transaction = t
                     o.paid = True
                     o.save()
@@ -345,6 +350,6 @@ class OrderServices(object):
                     ça devrait être l'api distant qui le fait, donc on ne fait que transmettre le message d'erreur de l'api
                     distant au client lorsqu'il y en a un.
                     '''
-                    response = getCreditCardDeclinedErrorDict(responseDict)
+                    response = getPaymentApiSError(code=statusCode, apiResponse=apiResponseDict, orderModelObject=o)
 
         return response
