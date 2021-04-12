@@ -1,6 +1,0 @@
-flask
-peewee
-schema
-requests
-psycopg2
-rq
