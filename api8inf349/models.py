@@ -22,7 +22,7 @@ def getDB():
 
 class BaseModel(Model):
     class Meta:
-
+        print(os.environ["DATABASE_URL"])
         database = PostgresqlDatabase(url=os.environ.get("DATABASE_URL"))
 
 
