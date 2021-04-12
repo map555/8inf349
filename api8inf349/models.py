@@ -23,7 +23,7 @@ def getDB():
 class BaseModel(Model):
     class Meta:
 
-        database = PostgresqlDatabase(getDB())
+        database = PostgresqlDatabase(url=getDB())
 
 
 class Product(BaseModel):
