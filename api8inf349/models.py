@@ -14,16 +14,14 @@ from peewee import Model,TextField, TimestampField, AutoField, CharField, Foreig
 
 
 def getDB():
-
-    db_settings=os.environ["DATABASE_URL"]
-
-    return db_settings
+    return {"host": os.environ["DB_HOST"], "user": os.environ["DB_USER"], "password": os.environ["DB_PASSWORD"],
+            "port": os.environ["DB_PORT"]}
 
 
 class BaseModel(Model):
     class Meta:
 
-        database = PostgresqlDatabase(url=getDB())
+        database = PostgresqlDatabase(os.environ["DB_NAME"], **getDB())
 
 
 class Product(BaseModel):
@@ -123,7 +121,7 @@ class PaymentError(BaseModel):
 @with_appcontext
 def init_db_command():
 
-    db = PostgresqlDatabase(url=getDB())
+    database = PostgresqlDatabase(os.environ["DB_NAME"], **getDB())
     db.drop_tables([Product, ShippingInformation, CreditCard, Transaction, Order, ProductOrdered,PaymentError])
     db.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order, ProductOrdered,PaymentError])
     click.echo("Initialized the database.")
