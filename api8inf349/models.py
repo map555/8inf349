@@ -121,7 +121,9 @@ class PaymentError(BaseModel):
 @with_appcontext
 def init_db_command():
 
+    
     database = PostgresqlDatabase(os.environ["DB_NAME"], **getDB())
+    print(test)
     db.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order, ProductOrdered,PaymentError])
     click.echo("Initialized the database.")
 
