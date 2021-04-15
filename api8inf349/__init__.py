@@ -1,4 +1,3 @@
-from api8inf349.models import getDB
 from flask import Flask, request, redirect, url_for
 from api8inf349.product_table_init import InitializeProduct
 from api8inf349.models import init_app, Product, Transaction, CreditCard, ShippingInformation
