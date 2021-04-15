@@ -1,9 +1,9 @@
 import os
 import click
 from flask.cli import with_appcontext
-from peewee import Model,TextField, TimestampField, AutoField, CharField, ForeignKeyField, IntegerField, FloatField, \
-    BooleanField, PostgresqlDatabase, Check
-
+from peewee import Model, TextField, TimestampField, AutoField, CharField, ForeignKeyField, IntegerField, FloatField, \
+    BooleanField, Check
+from api8inf349.db import db
 
 
 # FLASK_DEBUG=True FLASK_APP=Api8inf349 REDIS_URL=redis://localhost DB_HOST=localhost DB_USER=user DB_PASSWORD=pass DB_PORT=5432 DB_NAME=api8inf349 flask init-db
@@ -11,17 +11,9 @@ from peewee import Model,TextField, TimestampField, AutoField, CharField, Foreig
 # docker run -p 5000:5000 -e REDIS_URL=redis://host.docker.internal -e DB_HOST=host.docker.internal -e DB_USER=user -e DB_PASSWORD=pass -e DB_PORT=5432 -e DB_NAME=api8inf349 api8inf349
 
 
-
-
-def getDB():
-    return {"host": os.environ["DB_HOST"], "user": os.environ["DB_USER"], "password": os.environ["DB_PASSWORD"],
-            "port": os.environ["DB_PORT"]}
-
-
 class BaseModel(Model):
     class Meta:
-
-        database = PostgresqlDatabase(os.environ["DB_NAME"], **getDB())
+        database = db
 
 
 class Product(BaseModel):
@@ -112,19 +104,17 @@ class ProductOrdered(BaseModel):
 
 
 class PaymentError(BaseModel):
-    id=AutoField(primary_key=True)
-    order=ForeignKeyField(Order,null=False)
-    error=TextField(null=False)
-    time=TimestampField()
+    id = AutoField(primary_key=True)
+    order = ForeignKeyField(Order, null=False)
+    error = TextField(null=False)
+    time = TimestampField()
+
 
 @click.command("init-db")
 @with_appcontext
 def init_db_command():
-
-    
-    database = PostgresqlDatabase(os.environ["DB_NAME"], **getDB())
-    print(test)
-    db.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order, ProductOrdered,PaymentError])
+    db.drop_tables([Product, ShippingInformation, CreditCard, Transaction, Order, ProductOrdered, PaymentError])
+    db.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order, ProductOrdered, PaymentError])
     click.echo("Initialized the database.")
 
 

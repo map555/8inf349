@@ -1,4 +1,5 @@
 from redis import Redis
+from peewee import PostgresqlDatabase
 import os
 from peewee import PostgresqlDatabase
 import psycopg2
@@ -16,8 +17,11 @@ def getDB():
     return database
 """
 
+db=PostgresqlDatabase(url=os.environ["DATABASE_URL"])
+
 def getRedis():
     return Redis.from_url(os.environ["REDIS_URL"])
+
 
 
 
