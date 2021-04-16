@@ -20,7 +20,7 @@ def getDB():
 
 class BaseModel(Model):
     class Meta:
-        database = PostgresqlDatabase(os.environ["DB_NAME"], **getDB())
+        database = PostgresqlDatabase(os.environ["DB_NAME"], autorollback=True, **getDB())
 
 
 class Product(BaseModel):
