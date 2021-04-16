@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect, url_for
-from api8inf349.models import init_app, Product, Transaction, CreditCard, ShippingInformation
 from api8inf349.product_table_init import InitializeProduct
+from api8inf349.models import init_app, Product, Transaction, CreditCard, ShippingInformation
 from api8inf349.services import OrderServices, getOrderNotFoundErrorDict
 import json
 from api8inf349.db import getRedis
@@ -9,10 +9,11 @@ from rq import Queue, Worker
 # from rq_win import WindowsWorker as Worker
 
 
+
 def create_app():
     app = Flask(__name__)
     init_app(app)
-    
+    InitializeProduct()
 
     queue = Queue(connection=getRedis())
 
@@ -92,4 +93,3 @@ def create_app():
 
 if __name__ == '__main__':
     create_app().run()
-    InitializeProduct()
