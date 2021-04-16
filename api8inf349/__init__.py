@@ -11,7 +11,7 @@ from rq import Queue, Worker
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask("api8inf349")
     init_app(app)
     InitializeProduct()
 
