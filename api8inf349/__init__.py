@@ -5,7 +5,7 @@ from api8inf349.services import OrderServices, getOrderNotFoundErrorDict
 import json
 from api8inf349.db import getRedis
 from rq.job import Job
-from rq import Queue, Worker
+from rq import Queue, SimpleWorker as Worker
 # from rq_win import WindowsWorker as Worker
 
 
