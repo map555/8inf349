@@ -80,13 +80,10 @@ def create_app():
     def getPaymentErrorsLog():
         
         try:
-            click.echo("try")
             errors = PaymentError.select()
-            click.echo("request")
             errorsList = []
             for e in errors:
-                click.echo("loop")
-                errorsList.append({"id": e.id, "orderID": e.order, "error": e.error})
+                errorsList.append({"id": e.id, "orderID": e.order.id, "error": e.error,"time":e.time})
 
         except():
             errorsList = []
