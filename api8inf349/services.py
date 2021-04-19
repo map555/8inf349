@@ -13,10 +13,10 @@ import click
 def getMissingProductFieldErrorDict():
     error = {'errors': {'product': {"code": "", "name": ""}}}
     error['errors']['product']['code'] = "missing-fields"
-    error['errors']['product']['name'] = "The creation of an order requires a single product. " \
-                                         "The product dict must have the following form: { 'product': " \
+    error['errors']['product']['name'] = "The creation of an order requires a one or more products. " \
+                                         "The each product dict must have the following form:{ 'product': " \
                                          "[{ 'id': id1, 'quantity': quantity1 }, { 'id': id2, 'quantity': quantity2 }]" \
-                                         " }. Quantity must be an integer > 0."
+                                         " }. ID and quantity must be integer and quantity > 0."
 
     dict = {"status_code": 422, "object": error}
 
@@ -241,9 +241,7 @@ class OrderServices(object):
         order = redis.get(str(id))
 
         if order is not None:
-            print("1-2-1-2 Patate Poil Maudit Cave Gnagnagna")
             order = pickle.loads(order)
-            print("order from redis")
 
         else:
             order = Order.get_or_none(Order.id == id)
