@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect, url_for
 from api8inf349.product_table_init import InitializeProduct
-from api8inf349.models import init_app, Product, Transaction, CreditCard, ShippingInformation
+from api8inf349.models import init_app, Product, Transaction, CreditCard, ShippingInformation, PaymentError
 from api8inf349.services import OrderServices, getOrderNotFoundErrorDict
 import json
 from api8inf349.db import getRedis
