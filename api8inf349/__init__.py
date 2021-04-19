@@ -75,17 +75,20 @@ def create_app():
                                   mimetype='application/json')
 
     
-        #For showing the payment errors log
-    @app.route('/payment/errorslog',methods=['GET'])
+    # For showing the payment errors log
+    @app.route('/payment/errorslog', methods=['GET'])
     def getPaymentErrorsLog():
-        
+
         try:
-            errors=PaymentError.select()
-            errorsList=list(errors)
+            errors = PaymentError.select()
+            errorsList = []
+            for e in errors:
+                errorsList.append({"id": e.id, "orderID": e.order, "error": e.error})
+
         except:
             errorsList = []
-            
-        return app.response_class(response=json.dumps(errorsList),status=200,mimetype='application/json')
+
+        return app.response_class(response=json.dumps(errorsList), status=200, mimetype='application/json')
     
     
     @app.route("/job/<string:job_id>")
