@@ -83,7 +83,7 @@ def create_app():
             errors = PaymentError.select()
             errorsList = []
             for e in errors:
-                errorsList.append({"id": e.id, "orderID": e.order.id, "error": e.error,"time":e.time})
+                errorsList.append({"id": e.id, "orderID": e.order.id, "error": e.error,"time":str(e.time)})
 
         except():
             errorsList = []
