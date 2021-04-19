@@ -7,7 +7,7 @@ from api8inf349.db import getRedis
 from rq.job import Job
 from rq import Queue, SimpleWorker as Worker
 # from rq_win import WindowsWorker as Worker
-
+import click
 
 
 def create_app():
