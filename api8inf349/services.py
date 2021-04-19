@@ -84,7 +84,8 @@ def getPaymentApiSError(code, apiResponse, orderModelObject):
     fullOrderDict["status_code"] = code
 
     # store the error in the database
-    PaymentError.create(order=orderModelObject, error=json.dumps(error))
+    p=PaymentError(order=orderModelObject, error=json.dumps(error))
+    p.save()
     # dbError=PaymentError.get_or_none(PaymentError.order==orderModelObject)
     # print("id: ",dbError.id,"\torderID: ",orderModelObject,"\terror:",("\n"+str(error)),"\ntimestamp: ",dbError.time)
 
