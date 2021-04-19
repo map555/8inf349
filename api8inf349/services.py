@@ -7,6 +7,7 @@ from api8inf349.db import getRedis
 import pickle
 from peewee import fn
 import json
+import click
 
 
 def getMissingProductFieldErrorDict():
@@ -86,9 +87,9 @@ def getPaymentApiSError(code, apiResponse, orderModelObject):
     # store the error in the database
     p=PaymentError(order=orderModelObject, error=json.dumps(error))
     p.save()
-    # dbError=PaymentError.get_or_none(PaymentError.order==orderModelObject)
-    # print("id: ",dbError.id,"\torderID: ",orderModelObject,"\terror:",("\n"+str(error)),"\ntimestamp: ",dbError.time)
-
+    dbError=PaymentError.get_or_none(PaymentError.order==orderModelObject)
+    errorMessage="id: "+str(dbError.id)+"\torderID: "+str(orderModelObject)+"\terror:\n"+str(error)+"\n"+str(dbError.time)
+    click.echo(errorMessage)
     return fullOrderDict
 
 
