@@ -239,6 +239,7 @@ class OrderServices(object):
         order = redis.get(str(id))
 
         if order is not None:
+            print("1-2-1-2 Patate Poil Maudit Cave Gnagnagna")
             order = pickle.loads(order)
             print("order from redis")
 
