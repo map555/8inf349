@@ -74,6 +74,20 @@ def create_app():
         return app.response_class(response=json.dumps(response['object']), status=response['status_code'],
                                   mimetype='application/json')
 
+    
+        #For showing the payment errors log
+    @app.route('payment/errorslog',methods=['GET'])
+    def getPaymentErrorsLog():
+        
+        try:
+            errors=PaymentError.select()
+            errorsList=list(errors)
+        except:
+            errorsList = []
+            
+        return app.response_class(response=json.dumps(errorsList),status=200,mimetype='application/json')
+    
+    
     @app.route("/job/<string:job_id>")
     def verifyPaymentJob(job_id):
         job = queue.fetch_job(job_id)
