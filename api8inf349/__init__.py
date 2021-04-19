@@ -78,14 +78,17 @@ def create_app():
     # For showing the payment errors log
     @app.route('/payment/errorslog', methods=['GET'])
     def getPaymentErrorsLog():
-
+        
         try:
+            click.echo("try")
             errors = PaymentError.select()
+            click.echo("request")
             errorsList = []
             for e in errors:
+                click.echo("loop")
                 errorsList.append({"id": e.id, "orderID": e.order, "error": e.error})
 
-        except:
+        except():
             errorsList = []
 
         return app.response_class(response=json.dumps(errorsList), status=200, mimetype='application/json')
