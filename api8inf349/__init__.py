@@ -76,7 +76,7 @@ def create_app():
 
     
         #For showing the payment errors log
-    @app.route('payment/errorslog',methods=['GET'])
+    @app.route('/payment/errorslog',methods=['GET'])
     def getPaymentErrorsLog():
         
         try:
