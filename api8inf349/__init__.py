@@ -6,27 +6,27 @@ import json
 from api8inf349.db import getRedis
 from rq.job import Job
 from rq import Queue, SimpleWorker as Worker
-# from rq_win import WindowsWorker as Worker
 import click
+
+# from rq_win import WindowsWorker as Worker
 
 
 def create_app():
     app = Flask("api8inf349")
     init_app(app)
-
-
+    InitializeProduct()
 
     queue = Queue(connection=getRedis())
 
     @app.route('/')
     def ProductsGET():
-        prodsDict = {"products": []}
 
         prod = Product.select()
+        prodsDict = {"products": []}
         for p in prod:
             prodsDict["products"].append(
                 {'id': p.id, 'name': p.name, 'type': p.type, 'description': p.description, 'image': p.image,
-                "height": p.height, "weight": p.weight, "price": p.price, "rating": p.rating,"in_stock": p.in_stock})
+                 "height": p.height, "weight": p.weight, "price": p.price, "rating": p.rating, "in_stock": p.in_stock})
 
         return app.response_class(response=json.dumps(prodsDict), status=200, mimetype='application/json')
 
@@ -81,10 +81,13 @@ def create_app():
     def getPaymentErrorsLog():
 
         try:
+            click.echo("try")
             errors = PaymentError.select()
+            click.echo("request")
             errorsList = []
             for e in errors:
-                errorsList.append({"id": e.id, "orderID": e.order.id, "error": e.error, "time": str(e.time)})
+                click.echo("loop")
+                errorsList.append({"id": e.id, "orderID": e.order, "error": e.error})
 
         except():
             errorsList = []
@@ -108,5 +111,4 @@ def create_app():
 
 
 if __name__ == '__main__':
-    InitializeProduct()
     create_app().run()

@@ -44,7 +44,7 @@ def CheckExistance(jsonProduct):
             return True
         else:
             return False
-    except():
+    except:
         return False
 
 
