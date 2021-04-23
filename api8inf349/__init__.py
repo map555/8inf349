@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, url_for
 from api8inf349.models import init_app, Product, Transaction, CreditCard, ShippingInformation, PaymentError
 from api8inf349.services import OrderServices, getOrderNotFoundErrorDict
+from api8inf349.product_table_init import InitializeProduct
 import json
 from api8inf349.db import getRedis
 from rq.job import Job
@@ -16,6 +17,7 @@ def create_app():
     init_app(app)
     queue = Queue(connection=getRedis())
 
+    @app.before_first_request(InitializeProduct())
     @app.route('/')
     def ProductsGET():
 
