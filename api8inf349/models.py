@@ -167,7 +167,7 @@ class InitProductTable:
         if ValidateProductListSchema(self.__productsDict) is False:
             print("ERROR: INVALID PRODUCT!\nTHE PROGRAM WILL NOW EXIT.")
             exit(0)
-        for p in ProductsDict['products']:
+        for p in self.__productsDict['products']:
             checkExist = CheckExistance(p)
             if checkExist is not True:
                 Product.create(name=p['name'], type=p['type'], description=p['description'], image=p['image'],
