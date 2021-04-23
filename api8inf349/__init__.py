@@ -13,10 +13,8 @@ import click
 def create_app():
     app = Flask("api8inf349")
     init_app(app)
-    try:
-        InitializeProduct()
-    except():
-        pass
+
+
 
     queue = Queue(connection=getRedis())
 
@@ -110,4 +108,5 @@ def create_app():
 
 
 if __name__ == '__main__':
+    InitializeProduct()
     create_app().run()
