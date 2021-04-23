@@ -20,15 +20,12 @@ def create_app():
     @app.route('/')
     def ProductsGET():
         prodsDict = {"products": []}
-        try:
-            prod = Product.select()
-            for p in prod:
-                prodsDict["products"].append(
-                    {'id': p.id, 'name': p.name, 'type': p.type, 'description': p.description, 'image': p.image,
-                     "height": p.height, "weight": p.weight, "price": p.price, "rating": p.rating,
-                     "in_stock": p.in_stock})
-        except():
-            prodsDict = {"products": []}
+
+        prod = Product.select()
+        for p in prod:
+            prodsDict["products"].append(
+                {'id': p.id, 'name': p.name, 'type': p.type, 'description': p.description, 'image': p.image,
+                "height": p.height, "weight": p.weight, "price": p.price, "rating": p.rating,"in_stock": p.in_stock})
 
         return app.response_class(response=json.dumps(prodsDict), status=200, mimetype='application/json')
 
