@@ -17,7 +17,7 @@ def create_app():
     init_app(app)
     queue = Queue(connection=getRedis())
 
-    #@app.before_first_request(InitializeProduct())
+    @app.before_first_request(InitializeProduct())
     @app.route('/')
     def ProductsGET():
 
