@@ -25,11 +25,23 @@ Make sure that these libraries are installed:
 
         Schema
             version: 0.7.4
+            
+        requests
+            version: 2.25.1
+            
+        psycopg2
+            version: 2.8.6
+            
+        rq
+            version: 1.8.0
+    
+    *Docker and docker-compose need to be installed on the machine
+
 
 
 
     IDE: Pycharm
-        Edition: Professional
+        Edition: Professional/Community
         version: 2020.3
 
 
@@ -49,16 +61,46 @@ Make sure that these libraries are installed:
             Python 3.9 (if python 3.9)
 ```
 
-## Usage
+## Usage (Windows)
 
-First we initialize the database with this command (in Api8inf349 directory):
+We start by launching the PostgreSQL database and the redis cache with docker compose:
 ```
-$ FLASK_APP=Api8inf349 flask init-db
+$ docker-compose build
+$ docker-compose up
 ```
 
-Then to run the server (in Api8inf349 directory):
+Then we initialize the database with these commands:
 ```
-$ FLASK_APP=__init__.py flask run
+$ set FLASK_DEBUG=True& set FLASK_APP=api8inf349& set REDIS_URL=redis://localhost& set DB_HOST=localhost& set DB_USER=user& set DB_PASSWORD=pass& set DB_PORT=5432& set DB_NAME=api8inf349
+$ flask init-db
+```
+
+Then to run the server:
+```
+$ docker build -t api8inf349 .
+$ docker run -p 5000:5000 -e REDIS_URL=redis://host.docker.internal -e DB_HOST=host.docker.internal -e DB_USER=user -e DB_PASSWORD=pass -e DB_PORT=5432 -e DB_NAME=api8inf349 api8inf349 
+```
+
+The app will now be available at http://localhost:5000/
+
+## Usage (Linux)
+
+We start by launching the PostgreSQL database and the redis cache with docker compose:
+```
+$ docker-compose build
+$ docker-compose up
+```
+
+Then we initialize the database with these commands:
+```
+$ FLASK_DEBUG=True FLASK_APP=api8inf349 REDIS_URL=redis://localhost DB_HOST=localhost DB_USER=user DB_PASSWORD=pass DB_PORT=5432 DB_NAME=api8inf349
+$ flask init-db
+```
+
+Then to run the server:
+```
+$ docker build -t api8inf349 .
+$ docker run -p 5000:5000 -e REDIS_URL=redis://host.docker.internal -e DB_HOST=host.docker.internal -e DB_USER=user -e DB_PASSWORD=pass -e DB_PORT=5432 -e DB_NAME=api8inf349 api8inf349 
 ```
 
 The app will now be available at http://localhost:5000/
