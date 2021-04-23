@@ -168,7 +168,7 @@ class InitProductTable:
             print("ERROR: INVALID PRODUCT!\nTHE PROGRAM WILL NOW EXIT.")
             exit(0)
         for p in self.__productsDict['products']:
-            checkExist = CheckExistance(p)
+            checkExist = self.__CheckExistance(p)
             if checkExist is not True:
                 Product.create(name=p['name'], type=p['type'], description=p['description'], image=p['image'],
                                height=p['height'], weight=p['weight'], price=p['price'], rating=p['rating'],
