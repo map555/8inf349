@@ -1,5 +1,4 @@
 from flask import Flask, request, redirect, url_for
-from api8inf349.product_table_init import InitializeProduct
 from api8inf349.models import init_app, Product, Transaction, CreditCard, ShippingInformation, PaymentError
 from api8inf349.services import OrderServices, getOrderNotFoundErrorDict
 import json
@@ -8,14 +7,13 @@ from rq.job import Job
 from rq import Queue, SimpleWorker as Worker
 import click
 
+
 # from rq_win import WindowsWorker as Worker
 
 
 def create_app():
     app = Flask("api8inf349")
     init_app(app)
-    InitializeProduct()
-
     queue = Queue(connection=getRedis())
 
     @app.route('/')
