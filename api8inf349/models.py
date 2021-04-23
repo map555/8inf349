@@ -116,9 +116,9 @@ class PaymentError(BaseModel):
 def init_db_command():
     db = getDB()
     db.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order, ProductOrdered, PaymentError])
-    InitializeProduct()
     click.echo("Initialized the database.")
 
 
 def init_app(app):
     app.cli.add_command(init_db_command)
+    InitializeProduct()
