@@ -85,10 +85,11 @@ def getPaymentApiSError(code, apiResponse, orderModelObject):
     fullOrderDict["status_code"] = code
 
     # store the error in the database
-    p=PaymentError(order=orderModelObject, error=json.dumps(error))
+    p = PaymentError(order=orderModelObject, error=json.dumps(error))
     p.save()
-    dbError=PaymentError.get_or_none(PaymentError.order==orderModelObject)
-    errorMessage="id: "+str(dbError.id)+"\torderID: "+str(orderModelObject)+"\terror:\n"+str(error)+"\n"+str(dbError.time)
+    dbError = PaymentError.get_or_none(PaymentError.order == orderModelObject)
+    errorMessage = "id: " + str(dbError.id) + "\torderID: " + str(orderModelObject) + "\terror:\n" + str(
+        error) + "\n" + str(dbError.time)
     click.echo(errorMessage)
     return fullOrderDict
 
@@ -256,37 +257,38 @@ class OrderServices(object):
     @classmethod
     def setOrderClientInfo(cls, clientInfoDict, orderID):
 
-        # TODO : commencer par vérifier si la commande existe et si elle est pas payé avant de valider les données.
-        #  Si payé "erreur".
-        if ValidateClientInfoSchema(cInfoDict=clientInfoDict) is True:
-            o = cls.getOrder(id=orderID)
-            if o is not None:
+        o = cls.getOrder(id=orderID)
+        if o is not None:
 
-                sInfo = clientInfoDict['order']['shipping_information']
+            if not o.paid:
 
-                # Check in the db
-                sInfoModelObject = ShippingInformation.get_or_none(ShippingInformation.address == sInfo[
-                    'address'], ShippingInformation.postal_code == sInfo['postal_code'])
+                if ValidateClientInfoSchema(cInfoDict=clientInfoDict) is True:
+                    sInfo = clientInfoDict['order']['shipping_information']
 
-                if sInfoModelObject is None:
-                    sInfoModelObject = ShippingInformation.create(country=sInfo['country'],
-                                                                  address=sInfo['address'],
-                                                                  postal_code=sInfo['postal_code'],
-                                                                  city=sInfo['city'], province=sInfo['province'])
+                    # Check in the db
+                    sInfoModelObject = ShippingInformation.get_or_none(ShippingInformation.address == sInfo[
+                        'address'], ShippingInformation.postal_code == sInfo['postal_code'])
 
-                o.shipping_information = sInfoModelObject.id
-                o.email = clientInfoDict['order']['email']
-                o.save()
+                    if sInfoModelObject is None:
+                        sInfoModelObject = ShippingInformation.create(country=sInfo['country'],
+                                                                      address=sInfo['address'],
+                                                                      postal_code=sInfo['postal_code'],
+                                                                      city=sInfo['city'], province=sInfo['province'])
 
-                response = createOrderDict(orderModelObject=o)
+                    o.shipping_information = sInfoModelObject.id
+                    o.email = clientInfoDict['order']['email']
+                    o.save()
 
+                    response = createOrderDict(orderModelObject=o)
+
+                else:
+                    response = getMissingFieldErrorDict()
 
             else:
-                response = getOrderNotFoundErrorDict()
-
+                response = getOrderAlreadyPaidErrorDict()
 
         else:
-            response = getMissingFieldErrorDict()
+            response = getOrderNotFoundErrorDict()
 
         return response
 
