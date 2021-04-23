@@ -25,9 +25,9 @@ def create_app():
                 prodsDict["products"].append(
                     {'id': p.id, 'name': p.name, 'type': p.type, 'description': p.description, 'image': p.image,
                     "height": p.height, "weight": p.weight, "price": p.price, "rating": p.rating, "in_stock": p.in_stock})
-        except:
+        except():
             pass
-        
+
         return app.response_class(response=json.dumps(prodsDict), status=200, mimetype='application/json')
 
     @app.route('/order', methods=['POST'])
