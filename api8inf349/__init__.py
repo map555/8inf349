@@ -13,7 +13,6 @@ import click
 def create_app():
     app = Flask("api8inf349")
     init_app(app)
-    #InitializeProduct()
     queue = Queue(connection=getRedis())
 
     @app.route('/')

@@ -4,6 +4,7 @@ from flask.cli import with_appcontext
 from peewee import Model, TextField, TimestampField, AutoField, CharField, ForeignKeyField, IntegerField, FloatField, \
     BooleanField, PostgresqlDatabase, Check
 from api8inf349.db import getDB
+from api8inf349.product_table_init import InitializeProduct
 
 
 # FLASK_DEBUG=True FLASK_APP=Api8inf349 REDIS_URL=redis://localhost DB_HOST=localhost DB_USER=user DB_PASSWORD=pass DB_PORT=5432 DB_NAME=api8inf349 flask init-db
@@ -115,6 +116,7 @@ class PaymentError(BaseModel):
 def init_db_command():
     db = getDB()
     db.create_tables([Product, ShippingInformation, CreditCard, Transaction, Order, ProductOrdered, PaymentError])
+    InitializeProduct()
     click.echo("Initialized the database.")
 
 
