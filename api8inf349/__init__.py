@@ -87,7 +87,7 @@ def create_app():
             errorsList = []
             for e in errors:
                 click.echo("loop")
-                errorsList.append({"id": e.id, "orderID": e.order, "error": e.error})
+                errorsList.append({"id": e.id, "orderID": e.order.id, "error": e.error,"time":str(e.time)})
 
         except():
             errorsList = []
