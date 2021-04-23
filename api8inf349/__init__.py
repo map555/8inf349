@@ -14,6 +14,7 @@ def create_app():
     app = Flask("api8inf349")
     init_app(app)
     InitializeProduct()
+
     queue = Queue(connection=getRedis())
 
     @app.route('/')
@@ -24,9 +25,10 @@ def create_app():
             for p in prod:
                 prodsDict["products"].append(
                     {'id': p.id, 'name': p.name, 'type': p.type, 'description': p.description, 'image': p.image,
-                    "height": p.height, "weight": p.weight, "price": p.price, "rating": p.rating, "in_stock": p.in_stock})
+                     "height": p.height, "weight": p.weight, "price": p.price, "rating": p.rating,
+                     "in_stock": p.in_stock})
         except():
-            pass
+            prodsDict = {"products": []}
 
         return app.response_class(response=json.dumps(prodsDict), status=200, mimetype='application/json')
 
@@ -76,23 +78,21 @@ def create_app():
         return app.response_class(response=json.dumps(response['object']), status=response['status_code'],
                                   mimetype='application/json')
 
-    
     # For showing the payment errors log
     @app.route('/payment/errorslog', methods=['GET'])
     def getPaymentErrorsLog():
-        
+
         try:
             errors = PaymentError.select()
             errorsList = []
             for e in errors:
-                errorsList.append({"id": e.id, "orderID": e.order.id, "error": e.error,"time":str(e.time)})
+                errorsList.append({"id": e.id, "orderID": e.order.id, "error": e.error, "time": str(e.time)})
 
         except():
             errorsList = []
 
         return app.response_class(response=json.dumps(errorsList), status=200, mimetype='application/json')
-    
-    
+
     @app.route("/job/<string:job_id>")
     def verifyPaymentJob(job_id):
         job = queue.fetch_job(job_id)

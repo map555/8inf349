@@ -44,7 +44,7 @@ def CheckExistance(jsonProduct):
             return True
         else:
             return False
-    except:
+    except():
         return False
 
 
@@ -53,7 +53,6 @@ def UpdateProduct(ProductsDict):
     if ValidateProductListSchema(ProductsDict) is False:
         print("ERROR: INVALID PRODUCT!\nTHE PROGRAM WILL NOW EXIT.")
         exit(0)
-
     for p in ProductsDict['products']:
         checkExist = CheckExistance(p)
         if checkExist is not True:
