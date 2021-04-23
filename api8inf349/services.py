@@ -13,8 +13,8 @@ import click
 def getMissingProductFieldErrorDict():
     error = {'errors': {'product': {"code": "", "name": ""}}}
     error['errors']['product']['code'] = "missing-fields"
-    error['errors']['product']['name'] = "The creation of an order requires a one or more products. " \
-                                         "The each product dict must have the following form:{ 'product': " \
+    error['errors']['product']['name'] = "The creation of an order requires one or more products. " \
+                                         "Each order product dictionnary must have the following form:{ 'product': " \
                                          "[{ 'id': id1, 'quantity': quantity1 }, { 'id': id2, 'quantity': quantity2 }]" \
                                          " }. ID and quantity must be integer and quantity > 0."
 
