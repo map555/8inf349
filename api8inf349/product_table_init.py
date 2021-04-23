@@ -53,15 +53,13 @@ def UpdateProduct(ProductsDict):
     if ValidateProductListSchema(ProductsDict) is False:
         print("ERROR: INVALID PRODUCT!\nTHE PROGRAM WILL NOW EXIT.")
         exit(0)
-    try:
-        for p in ProductsDict['products']:
-            checkExist = CheckExistance(p)
-            if checkExist is not True:
-                Product.create(name=p['name'], type=p['type'], description=p['description'], image=p['image'],
-                               height=p['height'], weight=p['weight'], price=p['price'], rating=p['rating'],
-                               in_stock=p['in_stock'])
-    except:
-        pass
+
+    for p in ProductsDict['products']:
+        checkExist = CheckExistance(p)
+        if checkExist is not True:
+            Product.create(name=p['name'], type=p['type'], description=p['description'], image=p['image'],
+                           height=p['height'], weight=p['weight'], price=p['price'], rating=p['rating'],
+                           in_stock=p['in_stock'])
 
 
 def InitializeProduct():
