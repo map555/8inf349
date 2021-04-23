@@ -121,4 +121,4 @@ def init_db_command():
 
 def init_app(app):
     app.cli.add_command(init_db_command)
-    InitializeProduct()
+    #InitializeProduct()
