@@ -107,7 +107,7 @@ def CheckQuantity(pID, pQuantity):
 
 def CheckAvailability(pID):
     p = Product.get_or_none(Product.id == pID)
-    if p is None:
+    if p is not None:
         return True
     else:
         return False
