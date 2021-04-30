@@ -334,15 +334,12 @@ class OrderServices(object):
                         ccModelObject = CreditCard(name=cCard['name'], number=cCard['number'],
                                                    expiration_month=cCard['expiration_month'],
                                                    expiration_year=cCard['expiration_year'], cvv=cCard['cvv'])
-<<<<<<< Updated upstream
 
                     o.credit_card = ccModelObject
                     o.save()
-=======
                     ccModelObject.save()
 
                     o.credit_card = ccModelObject.id
->>>>>>> Stashed changes
 
                     t = Transaction.create(id=apiResponseDict['transaction']['id'],
                                            success=apiResponseDict['transaction']['success'],
