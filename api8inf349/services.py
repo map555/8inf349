@@ -126,15 +126,14 @@ def createOrderDict(orderModelObject):
                  'paid': orderModelObject.paid, 'product': pList, 'shipping_price': orderModelObject.shipping_price}
 
     if orderModelObject.shipping_information is not None:
-        orderDict['shipping_information'] = {'id': orderModelObject.shipping_information.id,
-                                             'country': orderModelObject.shipping_information.country,
+        orderDict['shipping_information'] = {'country': orderModelObject.shipping_information.country,
                                              'address': orderModelObject.shipping_information.address,
                                              'postal_code': orderModelObject.shipping_information.postal_code,
                                              'city': orderModelObject.shipping_information.city,
                                              'province': orderModelObject.shipping_information.province}
 
     if orderModelObject.credit_card is not None:
-        orderDict['credit_card'] = {'id': orderModelObject.credit_card.id, 'name': orderModelObject.credit_card.name,
+        orderDict['credit_card'] = {'name': orderModelObject.credit_card.name,
                                     'number': orderModelObject.credit_card.number,
                                     'expiration_month': orderModelObject.credit_card.expiration_month,
                                     'expiration_year': orderModelObject.credit_card.expiration_year,
@@ -333,7 +332,7 @@ class OrderServices(object):
                                                    expiration_year=cCard['expiration_year'], cvv=cCard['cvv'])
                         ccModelObject.save()
 
-                        o.credit_card = ccModelObject
+                        o.credit_card = ccModelObject.id
 
                     t = Transaction.create(id=apiResponseDict['transaction']['id'],
                                            success=apiResponseDict['transaction']['success'],
