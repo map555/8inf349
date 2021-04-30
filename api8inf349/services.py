@@ -16,7 +16,9 @@ def getMissingProductFieldErrorDict():
     error['errors']['product']['name'] = "The creation of an order requires one or more products. " \
                                          "Each order product dictionnary must have the following form:{ 'product': " \
                                          "[{ 'id': id1, 'quantity': quantity1 }, { 'id': id2, 'quantity': quantity2 }]" \
-                                         " }. ID and quantity must be integer and quantity > 0."
+                                         " }. ID and quantity must be integer and quantity > 0. Be also sure that " \
+                                         "the product ID's are valid." \
+
 
     dict = {"status_code": 422, "object": error}
 
@@ -55,7 +57,8 @@ def getAvailabilityProductErrorDict():
     error = {'errors': {'product': {"code": "", "name": ""}}}
 
     error['errors']['product']['code'] = "out-of-inventory"
-    error['errors']['product']['name'] = "The product you asked for is not in the inventory for now."
+    error['errors']['product']['name'] = "The product you asked for is not in the inventory or the specified quantity" \
+                                         "is set to 0."
 
     dict = {"status_code": 422, "object": error}
 
@@ -94,8 +97,9 @@ def getPaymentApiSError(code, apiResponse, orderModelObject):
     return fullOrderDict
 
 
-def CheckQuantity(pQuantity):
-    if pQuantity > 0:
+def CheckQuantity(pID, pQuantity):
+    p=Product.get_or_none(Product.id==pID)
+    if (pQuantity > 0) and (p.in_stock is True):
         return True
     else:
         return False
@@ -103,7 +107,7 @@ def CheckQuantity(pQuantity):
 
 def CheckAvailability(pID):
     p = Product.get_or_none(Product.id == pID)
-    if p.in_stock is True:
+    if p is None:
         return True
     else:
         return False
@@ -179,7 +183,7 @@ def ValidateOrder(pList):
         if CheckAvailability(p["id"]) is False:
             return getMissingProductFieldErrorDict()
 
-        if CheckQuantity(p["quantity"]) is False:
+        if CheckQuantity(p["id"],p["quantity"]) is False:
             return getAvailabilityProductErrorDict()
 
     return True
@@ -330,9 +334,15 @@ class OrderServices(object):
                         ccModelObject = CreditCard(name=cCard['name'], number=cCard['number'],
                                                    expiration_month=cCard['expiration_month'],
                                                    expiration_year=cCard['expiration_year'], cvv=cCard['cvv'])
+<<<<<<< Updated upstream
 
                     o.credit_card = ccModelObject
                     o.save()
+=======
+                    ccModelObject.save()
+
+                    o.credit_card = ccModelObject.id
+>>>>>>> Stashed changes
 
                     t = Transaction.create(id=apiResponseDict['transaction']['id'],
                                            success=apiResponseDict['transaction']['success'],
